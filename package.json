@@ -1,0 +1,23 @@
+{
+  "name": "tedbus",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm install --prefix tedbus-backend && npm install --prefix tedbus-frontend && npm run build --prefix tedbus-frontend",
+    "start": "npm run start --prefix tedbus-backend"
+  },
+
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/125Praveshyadav/TedBus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/125Praveshyadav/TedBus/issues"
+  },
+  "homepage": "https://github.com/125Praveshyadav/TedBus#readme"
+}
