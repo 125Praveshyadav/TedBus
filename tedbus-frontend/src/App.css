@@ -1,0 +1,11 @@
+/* @media (max-width: 992px) {
+  .desktop-filter {
+    display: none;
+  }
+}
+
+@media (min-width: 993px) {
+  button {
+    display: none;
+  }
+} */
