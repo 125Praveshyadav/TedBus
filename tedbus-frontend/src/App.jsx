@@ -25,17 +25,25 @@ import Ticket from "./pages/user/Ticket";
 // import NotFound from "./components/common/NotFound";
 import AdminRoutes from "./routes/admin/AdminRoutes";
 import AdminProtectedRoute from "./routes/admin/AdminProtectedRoutes";
+import CommunityRoutes from "./routes/community/CommunityRoutes";
+import { SocketProvider } from "./components/context/SocketContext";
+import Notifications from "./pages/user/Notifications";
+import NotificationSettings from "./pages/user/NotificationSettings";
+import { ThemeProvider } from "./components/context/ThemeContext";
 
 function App() {
    const location = useLocation();
 
   const isAdminRoute = location.pathname.startsWith("/admin");
+  <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300"></div>
 
  
   return (
-    <>
+    <ThemeProvider> 
+     <SocketProvider>   
         {!isAdminRoute && <Navbar />} 
         {/* <Navbar/> */}
+
 
       <Routes>
         <Route path="/" element={<Home />}></Route>
@@ -74,6 +82,8 @@ function App() {
 
         <Route path="/ticket" element={<Ticket />}></Route>
 
+         <Route path="/community/*" element={<CommunityRoutes />} />
+
         <Route
           path="/admin/*"
           element={
@@ -82,9 +92,14 @@ function App() {
             </AdminProtectedRoute>
           }
         />
+       <Route path="/notifications" element={<Notifications />} />
+<Route path="/notification-settings" element={<NotificationSettings />} />
+
+       
 
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
+ 
 
       <ToastContainer
         position="top-right"
@@ -95,7 +110,9 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-    </>
+       </SocketProvider> 
+         </ThemeProvider>
+  
   );
 }
 

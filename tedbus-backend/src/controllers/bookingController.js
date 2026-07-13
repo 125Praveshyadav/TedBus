@@ -4,10 +4,11 @@ const PDFDocument = require("pdfkit");
 const razorpay = require("../config/razorpay");
 const crypto = require("crypto");
 const generatePNR = require("../utils/generatePNR");
-const sendTicketEmail = require(
-  "../services/sendTicketEmail"
-);
+const sendTicketEmail = require("../services/sendTicketEmail");
 const generateTicketPdf = require("../utils/generateTicketPdf");
+
+// 🔔 NEW — Notification import
+const { notifyUser } = require("../services/notificationDispatcher");
 
 
 const getBookingSeats = (booking) => {
@@ -289,7 +290,6 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-//get my booking
 exports.getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({
@@ -326,7 +326,6 @@ exports.getSingleBooking = async (req, res) => {
       });
     }
 
-    // Security Check
     if (booking.user._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -348,7 +347,6 @@ exports.getSingleBooking = async (req, res) => {
   }
 };
 
-//download ticket
 exports.downloadTicket = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id)
@@ -380,7 +378,6 @@ exports.downloadTicket = async (req, res) => {
   }
 };
 
-//create pay order
 exports.createPaymentOrder = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.bookingId);
@@ -416,16 +413,13 @@ exports.createPaymentOrder = async (req, res) => {
 };
 
 
-
-//cancel
 exports.cancelBooking = async (req, res) => {
-  
   try {
     const { bookingId } = req.params;
 
     const { cancellationReason } = req.body;
 
-    const booking = await Booking.findById(bookingId);
+    const booking = await Booking.findById(bookingId).populate("bus", "busName");
 
     if (!booking) {
       return res.status(404).json({
@@ -433,16 +427,10 @@ exports.cancelBooking = async (req, res) => {
         message: "Booking not found",
       });
     }
-  console.log(
-  "Booking User =>",
-  booking.user.toString()
-);
 
-console.log(
-  "Logged In User =>",
-  req.user._id.toString()
-);
-    // Ownership check
+    console.log("Booking User =>", booking.user.toString());
+    console.log("Logged In User =>", req.user._id.toString());
+
     if (booking.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
@@ -450,7 +438,6 @@ console.log(
       });
     }
 
-    // Already cancelled
     if (booking.bookingStatus === "Cancelled") {
       return res.status(400).json({
         success: false,
@@ -467,10 +454,8 @@ console.log(
       });
     }
 
-    // Extract booked seats
-  const bookedSeats = getBookingSeats(booking);
+    const bookedSeats = getBookingSeats(booking);
 
-    // Release seats
     bus.bookedSeats = bus.bookedSeats.filter(
       (seat) => !bookedSeats.includes(seat),
     );
@@ -479,14 +464,10 @@ console.log(
 
     await bus.save();
 
-    // Update booking
     booking.bookingStatus = "Cancelled";
-
     booking.cancelledAt = new Date();
-
     booking.cancellationReason = cancellationReason || "User Cancelled";
 
-    // Refund workflow
     if (booking.paymentStatus === "Paid") {
       booking.refundStatus = "Pending";
     } else {
@@ -494,6 +475,18 @@ console.log(
     }
 
     await booking.save();
+
+    // 🔔 NOTIFICATION — Booking Cancelled
+    notifyUser({
+      recipientId: booking.user,
+      type: "booking_cancelled",
+      title: "Booking Cancelled ❌",
+      message: `Your booking PNR: ${booking.pnr} for ${bus.busName || "bus"} has been cancelled.${booking.refundStatus === "Pending" ? " Refund will be processed within 5-7 business days." : ""}`,
+      icon: "x-circle",
+      actionUrl: "/my-bookings",
+      referenceType: "Booking",
+      referenceId: booking._id,
+    }).catch((err) => console.error("Cancel notification failed:", err.message));
 
     res.status(200).json({
       success: true,

@@ -9,3 +9,38 @@
     display: none;
   }
 } */
+ /* ===== Google Translate Cleanup ===== */
+
+/* Top wala Google banner hatao */
+.goog-te-banner-frame,
+.skiptranslate iframe {
+  display: none !important;
+}
+
+/* Banner ki wajah se body neeche shift ho jaati hai — usko fix karo */
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+/* Google ka tooltip/popup hatao */
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+/* Translated text pe highlight hatao */
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Google logo/branding widget hatao */
+.goog-logo-link,
+.goog-te-gadget span {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  font-size: 0 !important;
+}

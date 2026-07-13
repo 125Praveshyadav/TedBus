@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 // import { createRoot } from 'react-dom/client'
 import "./index.css";
 import App from "./App.jsx";
+import './i18n/config'; 
+
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./components/context/AuthContext.jsx";
 

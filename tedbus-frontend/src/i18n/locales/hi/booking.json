@@ -1,0 +1,72 @@
+{
+  "search": {
+    "title": "खोज परिणाम",
+    "busesFound": "बसें मिलीं",
+    "noBuses": "इस रूट पर कोई बस नहीं मिली",
+    "filters": "फ़िल्टर",
+    "sortBy": "क्रमबद्ध करें",
+    "priceLowHigh": "कीमत: कम से ज़्यादा",
+    "priceHighLow": "कीमत: ज़्यादा से कम",
+    "departure": "प्रस्थान समय",
+    "rating": "रेटिंग"
+  },
+  "bus": {
+    "seatsAvailable": "सीटें उपलब्ध",
+    "viewSeats": "सीटें देखें",
+    "amenities": "सुविधाएं",
+    "boardingPoints": "बोर्डिंग पॉइंट्स",
+    "droppingPoints": "ड्रॉपिंग पॉइंट्स"
+  },
+  "seats": {
+    "title": "अपनी सीटें चुनें",
+    "selected": "चुनी गई",
+    "available": "उपलब्ध",
+    "booked": "बुक हो चुकी",
+    "ladies": "महिला सीट",
+    "maxSeats": "अधिकतम 6 सीटें चुन सकते हैं",
+    "proceed": "बुकिंग के लिए आगे बढ़ें",
+    "seatNo": "सीट नंबर"
+  },
+  "passenger": {
+    "title": "यात्री विवरण",
+    "passengerInfo": "यात्री जानकारी",
+    "contactDetails": "संपर्क विवरण",
+    "age": "उम्र",
+    "gender": "लिंग",
+    "male": "पुरुष",
+    "female": "महिला",
+    "boardingPoint": "बोर्डिंग पॉइंट",
+    "droppingPoint": "ड्रॉपिंग पॉइंट"
+  },
+  "payment": {
+    "title": "भुगतान",
+    "fareSummary": "किराया विवरण",
+    "baseFare": "मूल किराया",
+    "gst": "जीएसटी",
+    "platformFee": "प्लेटफॉर्म शुल्क",
+    "discount": "छूट",
+    "totalAmount": "कुल राशि",
+    "applyCoupon": "कूपन लगाएं",
+    "couponCode": "कूपन कोड",
+    "payNow": "अभी भुगतान करें",
+    "processing": "भुगतान हो रहा है..."
+  },
+  "ticket": {
+    "bookingConfirmed": "बुकिंग कन्फर्म हो गई!",
+    "pnr": "PNR नंबर",
+    "downloadTicket": "टिकट डाउनलोड करें",
+    "journeyDate": "यात्रा की तारीख",
+    "totalPaid": "कुल भुगतान"
+  },
+  "myBookings": {
+    "title": "मेरी बुकिंग",
+    "upcoming": "आगामी",
+    "completed": "पूर्ण",
+    "cancelled": "रद्द",
+    "cancelBooking": "बुकिंग रद्द करें",
+    "rateJourney": "यात्रा को रेट करें",
+    "noBookings": "कोई बुकिंग नहीं मिली",
+    "cancelConfirm": "क्या आप वाकई यह बुकिंग रद्द करना चाहते हैं?",
+    "cancelReason": "रद्द करने का कारण"
+  }
+}

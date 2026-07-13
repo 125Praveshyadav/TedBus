@@ -1,0 +1,72 @@
+{
+  "search": {
+    "title": "Search Results",
+    "busesFound": "buses found",
+    "noBuses": "No buses found for this route",
+    "filters": "Filters",
+    "sortBy": "Sort By",
+    "priceLowHigh": "Price: Low to High",
+    "priceHighLow": "Price: High to Low",
+    "departure": "Departure Time",
+    "rating": "Rating"
+  },
+  "bus": {
+    "seatsAvailable": "seats available",
+    "viewSeats": "View Seats",
+    "amenities": "Amenities",
+    "boardingPoints": "Boarding Points",
+    "droppingPoints": "Dropping Points"
+  },
+  "seats": {
+    "title": "Select Your Seats",
+    "selected": "Selected",
+    "available": "Available",
+    "booked": "Booked",
+    "ladies": "Ladies",
+    "maxSeats": "Maximum 6 seats allowed",
+    "proceed": "Proceed to Book",
+    "seatNo": "Seat No"
+  },
+  "passenger": {
+    "title": "Passenger Details",
+    "passengerInfo": "Passenger Information",
+    "contactDetails": "Contact Details",
+    "age": "Age",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "boardingPoint": "Boarding Point",
+    "droppingPoint": "Dropping Point"
+  },
+  "payment": {
+    "title": "Payment",
+    "fareSummary": "Fare Summary",
+    "baseFare": "Base Fare",
+    "gst": "GST",
+    "platformFee": "Platform Fee",
+    "discount": "Discount",
+    "totalAmount": "Total Amount",
+    "applyCoupon": "Apply Coupon",
+    "couponCode": "Coupon Code",
+    "payNow": "Pay Now",
+    "processing": "Processing payment..."
+  },
+  "ticket": {
+    "bookingConfirmed": "Booking Confirmed!",
+    "pnr": "PNR Number",
+    "downloadTicket": "Download Ticket",
+    "journeyDate": "Journey Date",
+    "totalPaid": "Total Paid"
+  },
+  "myBookings": {
+    "title": "My Bookings",
+    "upcoming": "Upcoming",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "cancelBooking": "Cancel Booking",
+    "rateJourney": "Rate Journey",
+    "noBookings": "No bookings found",
+    "cancelConfirm": "Are you sure you want to cancel this booking?",
+    "cancelReason": "Cancellation Reason"
+  }
+}

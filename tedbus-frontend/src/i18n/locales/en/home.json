@@ -1,0 +1,60 @@
+{
+  "hero": {
+    "badge": "India's smarter bus booking experience",
+    "title": "Book Bus Tickets",
+    "titleHighlight": "Faster, Safer & Easier",
+    "subtitle": "Travel across cities with verified buses, live seat selection, secure payments, instant ticket confirmation and reliable support.",
+    "downloadApp": "Download Mobile App",
+    "happyTravellers": "10k+ happy travellers choose TedBus",
+    "searchTitle": "Search Buses",
+    "searchSubtitle": "Find buses for your next journey",
+    "from": "From",
+    "to": "To",
+    "journeyDate": "Journey Date",
+    "searchPlaceholderFrom": "Enter source city",
+    "searchPlaceholderTo": "Enter destination city",
+    "searchButton": "Search Buses",
+    "swapCities": "Swap source and destination",
+    "popularRoutes": "Popular Routes",
+    "routes": "Routes",
+    "rating": "Rating",
+    "support": "Support"
+  },
+  "benefits": {
+    "safeTravel": "Safe Travel",
+    "safeTravelDesc": "Verified buses and secure journeys",
+    "easyPayment": "Easy Payment",
+    "easyPaymentDesc": "Fast and secure online payments",
+    "support247": "24/7 Support",
+    "support247Desc": "Always here to help you"
+  },
+  "heroErrors": {
+    "sourceRequired": "Source city is required",
+    "destinationRequired": "Destination city is required",
+    "sameCity": "Source and destination cannot be same",
+    "dateRequired": "Journey date is required",
+    "pastDate": "Journey date cannot be in the past"
+  },
+  "features": {
+    "title": "Why Choose TedBus?",
+    "safeTravel": "Safe Travel",
+    "safeTravelDesc": "Verified operators and sanitized buses",
+    "easyBooking": "Easy Booking",
+    "easyBookingDesc": "Book tickets in under 2 minutes",
+    "support": "24x7 Support",
+    "supportDesc": "We are always here to help you",
+    "refund": "Instant Refund",
+    "refundDesc": "Quick and hassle-free cancellations"
+  },
+  "popularRoutes": {
+    "title": "Popular Routes",
+    "viewAll": "View All Routes"
+  },
+  "offers": {
+    "title": "Exclusive Offers",
+    "useCode": "Use Code"
+  },
+  "testimonials": {
+    "title": "What Our Travelers Say"
+  }
+}

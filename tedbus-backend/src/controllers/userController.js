@@ -171,3 +171,30 @@ exports.updateProfilePhoto = async (req, res) => {
     });
   }
 };
+
+exports.updateTheme = async (req, res) => {
+  try {
+    const { theme } = req.body;
+
+    if (!theme || !["light", "dark"].includes(theme)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid theme. Allowed: light, dark",
+      });
+    }
+
+    const user = await require("../models/User").findByIdAndUpdate(
+      req.user._id,
+      { theme },
+      { returnDocument: "after" }
+    ).select("-password");
+
+    res.status(200).json({
+      success: true,
+      message: "Theme preference updated",
+      theme: user.theme,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

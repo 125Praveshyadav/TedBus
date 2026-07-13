@@ -9,7 +9,7 @@ import {
 
 import { authService } from "../../services/authService";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 const TOKEN_KEY = "token";
 const USER_KEY = "user";
@@ -318,6 +318,7 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

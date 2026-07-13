@@ -8,7 +8,7 @@ const { validateRegister } = require("../validations/authValidation");
 const { verify } = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const sendEmail = require("../services/emailService");
-console.log("Loaded User.js from:", require.resolve("../models/User"));
+
 
 //register logic
 exports.register = async (req, res) => {
@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
     const otp = generateOTP();
 
     await Otp.deleteMany({ email });
-    console.log("BEFORE OTP CREATE");
+  
     const otpDoc = await Otp.create({
       name,
       email,
@@ -38,8 +38,7 @@ exports.register = async (req, res) => {
       otp,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     });
-    console.log("AFTER OTP CREATE");
-    console.log("SAVED OTP DOC =>", otpDoc);
+    
 
     await sendOTP(email, otp);
 

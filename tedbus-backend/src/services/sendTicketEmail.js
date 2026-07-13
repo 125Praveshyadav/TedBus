@@ -1,4 +1,4 @@
-const { sendEmail } = require("./emailService");
+const sendEmail  = require("./emailService");
 const generateTicketBuffer = require("../utils/generateTicketBuffer");
 
 const formatDate = (date) => {

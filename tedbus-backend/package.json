@@ -24,18 +24,22 @@
     "express-validator": "^7.3.2",
     "helmet": "^8.2.0",
     "html2canvas": "^1.4.1",
+    "joi": "^18.2.3",
     "jsonwebtoken": "^9.0.3",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.21.0",
     "mongoose": "^9.7.2",
     "morgan": "^1.11.0",
     "multer": "^2.2.0",
+    "node-cron": "^4.5.0",
     "nodemailer": "^9.0.1",
     "otp-generator": "^4.0.1",
     "pdfkit": "^0.19.1",
     "qrcode": "^1.5.4",
     "razorpay": "^2.9.6",
-    "recharts": "^3.9.0"
+    "recharts": "^3.9.0",
+    "socket.io": "^4.8.3",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

@@ -6,6 +6,7 @@ const {
   changePassword,
   updateProfile,
   updateProfilePhoto,
+  updateTheme,
 } = require("../controllers/userController");
 
 const { isAuthenticated } = require("../middleware/authMiddleware");
@@ -22,5 +23,6 @@ router.put(
   upload.single("profileImage"),
   updateProfilePhoto
 );
+router.put("/theme", isAuthenticated, updateTheme);
 
 module.exports = router;

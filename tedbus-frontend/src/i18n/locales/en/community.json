@@ -1,0 +1,81 @@
+{
+  "home": {
+    "title": "Travel Community",
+    "subtitle": "Share stories, ask routes, and help fellow travelers",
+    "writePost": "Write a Post",
+    "shareExperience": "Share your travel experience...",
+    "noPosts": "No posts yet",
+    "beFirst": "Be the first to share a travel story!"
+  },
+  "post": {
+    "createTitle": "Create a Post",
+    "postTitle": "Post Title",
+    "postType": "Post Type",
+    "story": "Travel Story",
+    "tip": "Travel Tip",
+    "photo": "Photo Gallery",
+    "discussion": "Discussion",
+    "content": "Your Story / Content",
+    "addRoute": "Add Route (Optional)",
+    "tags": "Tags (Comma separated)",
+    "addPhotos": "Add Photos (Max 5)",
+    "publish": "Publish Post",
+    "publishing": "Publishing...",
+    "likes": "Likes",
+    "comments": "Comments",
+    "share": "Share",
+    "save": "Save",
+    "report": "Report",
+    "edit": "Edit Post",
+    "delete": "Delete Post"
+  },
+  "comments": {
+    "title": "Comments",
+    "writeComment": "Write a comment...",
+    "reply": "Reply",
+    "noComments": "No comments yet. Be the first!",
+    "viewReplies": "View Replies"
+  },
+  "sidebar": {
+    "quickActions": "Quick Actions",
+    "newPost": "New Post",
+    "forums": "Forums",
+    "myProfile": "My Profile",
+    "saved": "Saved",
+    "trending": "Trending",
+    "hotPosts": "Hot Posts",
+    "leaders": "Leaders",
+    "topContributors": "Top Contributors",
+    "earnBadges": "Earn Badges",
+    "guidelines": "Community Guidelines"
+  },
+  "profile": {
+    "posts": "Posts",
+    "answers": "Answers",
+    "upvotes": "Upvotes",
+    "achievements": "Achievements",
+    "savedPosts": "Saved",
+    "noSaved": "No saved posts yet",
+    "joined": "Joined"
+  },
+  "trending": {
+    "title": "Trending Now",
+    "subtitle": "Most engaging posts in the community"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Top contributors of TedBus Community",
+    "points": "Points"
+  },
+  "reportModal": {
+    "title": "Report Content",
+    "subtitle": "Help us keep TedBus Community safe",
+    "spam": "Spam or misleading",
+    "abuse": "Abusive or harmful",
+    "inappropriate": "Inappropriate content",
+    "misinformation": "False information",
+    "other": "Something else",
+    "describe": "Please describe the issue...",
+    "submitReport": "Submit Report"
+  }
+}

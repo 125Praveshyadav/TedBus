@@ -1,19 +1,18 @@
+const { notifyUser } = require("../services/notificationDispatcher");
 const Payment = require("../models/Payment");
 const Booking = require("../models/Booking");
+const Bus = require("../models/Bus"); // 🔑 FIX 1 — Ye line missing thi
 const Coupon = require("../models/Coupon");
 const asyncHandler = require("express-async-handler");
 const crypto = require("crypto");
 const Razorpay = require("razorpay");
-// const { sendTicketEmail } = require("../services/emailService");
 const sendTicketEmail = require("../services/sendTicketEmail");
 
-// Initialize Razorpay
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// Generate PNR
 const generatePNR = () => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let pnr = "";
@@ -23,13 +22,9 @@ const generatePNR = () => {
   return pnr;
 };
 
-// @desc    Create Razorpay order
-// @route   POST /api/v1/payments/create-order
-// @access  Private
 exports.createOrder = asyncHandler(async (req, res) => {
   const { bookingId, amount, paymentMethod, couponCode } = req.body;
 
-  // Validate booking
   const booking = await Booking.findOne({ bookingId })
     .populate("user")
     .populate("bus");
@@ -41,7 +36,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     });
   }
 
-  // Apply coupon if provided
   let finalAmount = amount;
   let discount = 0;
 
@@ -53,7 +47,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     });
 
     if (coupon) {
-      // Check usage limit
       if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
         return res.status(400).json({
           success: false,
@@ -61,7 +54,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
         });
       }
 
-      // Check minimum purchase
       if (amount < coupon.minPurchase) {
         return res.status(400).json({
           success: false,
@@ -79,15 +71,13 @@ exports.createOrder = asyncHandler(async (req, res) => {
       }
       finalAmount = amount - discount;
 
-      // Update coupon usage
       coupon.usedCount += 1;
       await coupon.save();
     }
   }
 
-  // Create Razorpay order
   const options = {
-    amount: Math.round(finalAmount * 100), // Razorpay accepts amount in paise
+    amount: Math.round(finalAmount * 100),
     currency: "INR",
     receipt: bookingId,
     notes: {
@@ -100,7 +90,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
 
   const razorpayOrder = await razorpay.orders.create(options);
 
-  // Update booking with order details
   booking.orderId = razorpayOrder.id;
   booking.totalAmount = finalAmount;
   booking.originalAmount = amount;
@@ -120,9 +109,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Verify Razorpay payment
-// @route   POST /api/v1/payments/verify-payment
-// @access  Private
 exports.verifyPayment = async (req, res) => {
   try {
     const {
@@ -142,7 +128,6 @@ exports.verifyPayment = async (req, res) => {
 
     if (!secret) {
       console.error("❌ RAZORPAY_KEY_SECRET missing in backend config.env");
-
       return res.status(500).json({
         success: false,
         message: "Razorpay secret missing on server",
@@ -166,7 +151,7 @@ exports.verifyPayment = async (req, res) => {
     const booking = await Booking.findOne({
       orderId: razorpay_order_id,
     })
-      .populate("user")
+      .populate("user", "name email phone")
       .populate("bus");
 
     if (!booking) {
@@ -188,32 +173,31 @@ exports.verifyPayment = async (req, res) => {
     }
 
     await booking.save();
-      
-    // Send confirmation email with PDF
-try {
-  // Populate bus + user before sending email
-  const populatedBooking = await booking.populate([
-    { path: "user", select: "name email phone" },
-    { path: "bus" },
-  ]);
 
-  // Don't await — let it run in background so user response is fast
-  sendTicketEmail(populatedBooking).catch((err) =>
-    console.error("Background email failed:", err.message)
-  );
-} catch (err) {
-  console.error("Email trigger error:", err.message);
-}
+    // 🔔 FIX 2 — booking.bus already populated hai, seedha use karo
+    // Bus.findById() ki zaroorat nahi
+    const busName = booking.bus?.busName || "bus";
+    const userId = booking.user?._id || booking.user;
 
+    notifyUser({
+      recipientId: userId, // FIX 3 — populated object se _id nikalo
+      type: "booking_confirmed",
+      title: "Booking Confirmed! 🎫",
+      message: `Your booking PNR: ${booking.pnr} for ${busName} on ${new Date(booking.journeyDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })} is confirmed! Seats: ${booking.seatNumbers?.join(", ")}. Total: ₹${booking.totalAmount}`,
+      icon: "ticket",
+      actionUrl: "/my-bookings",
+      referenceType: "Booking",
+      referenceId: booking._id,
+    }).catch((err) => console.error("Booking confirm notification failed:", err.message));
 
-
-    // try {
-    //   if (typeof sendTicketEmail === "function") {
-    //     await sendTicketEmail(booking);
-    //   }
-    // } catch (mailError) {
-    //   console.warn("Ticket email send failed:", mailError.message);
-    // }
+    // 📧 Email with PDF — Background mein bhejo
+    try {
+      sendTicketEmail(booking).catch((err) =>
+        console.error("Background email failed:", err.message)
+      );
+    } catch (err) {
+      console.error("Email trigger error:", err.message);
+    }
 
     res.status(200).json({
       success: true,
@@ -222,7 +206,6 @@ try {
     });
   } catch (error) {
     console.error("Payment verification error:", error);
-
     res.status(500).json({
       success: false,
       message: error.message,
@@ -230,9 +213,6 @@ try {
   }
 };
 
-// @desc    Get payment details
-// @route   GET /api/v1/payments/:paymentId
-// @access  Private
 exports.getPaymentDetails = asyncHandler(async (req, res) => {
   const booking = await Booking.findOne({
     paymentId: req.params.paymentId,
@@ -253,9 +233,6 @@ exports.getPaymentDetails = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Apply coupon
-// @route   POST /api/v1/payments/apply-coupon
-// @access  Private
 exports.applyCoupon = asyncHandler(async (req, res) => {
   const { couponCode, amount } = req.body;
 
@@ -272,7 +249,6 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
     });
   }
 
-  // Check usage limit
   if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
     return res.status(400).json({
       success: false,
@@ -280,7 +256,6 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
     });
   }
 
-  // Check minimum purchase
   if (amount < coupon.minPurchase) {
     return res.status(400).json({
       success: false,
@@ -313,9 +288,6 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Refund payment
-// @route   POST /api/v1/payments/refund
-// @access  Private
 exports.refundPayment = asyncHandler(async (req, res) => {
   const { bookingId, reason } = req.body;
 
@@ -337,16 +309,14 @@ exports.refundPayment = asyncHandler(async (req, res) => {
     });
   }
 
-  // Create refund in Razorpay
   const refund = await razorpay.payments.refund(booking.paymentId, {
-    amount: Math.round(booking.totalAmount * 100), // Full refund
+    amount: Math.round(booking.totalAmount * 100),
     notes: {
       reason: reason,
       bookingId: bookingId,
     },
   });
 
-  // Update booking
   booking.paymentStatus = "Refunded";
   booking.bookingStatus = "Cancelled";
   booking.refundId = refund.id;

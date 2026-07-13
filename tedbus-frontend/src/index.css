@@ -3,5 +3,34 @@
 
 @import "tailwindcss";
   @tailwind utilities;
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 🌙 Dark Mode Global Background */
+@layer base {
+  body {
+    @apply bg-white text-slate-900 transition-colors duration-300;
+  }
+  .dark body {
+    @apply bg-slate-950 text-white; /* Dark mode mein poora page dark ho jayega */
+  }
+}
 
 
+.clay-card {
+  background: #fff0e6;
+  border-radius: 32px;
+  box-shadow: 
+    12px 12px 24px rgba(220, 38, 38, 0.12),
+    -8px -8px 20px rgba(255, 255, 255, 0.8),
+    inset 4px 4px 8px rgba(255,255,255,0.6),
+    inset -4px -4px 8px rgba(220,38,38,0.08);
+  border: 1px solid rgba(255,255,255,0.6);
+  transition: all 0.3s ease;
+}
+
+.clay-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 
+    16px 16px 32px rgba(220, 38, 38, 0.18),
+    -10px -10px 24px rgba(255, 255, 255, 0.9);
+}
