@@ -22,6 +22,9 @@ const errorHandler = require("./src/middleware/errorHandler");
 const notificationRoutes = require("./src/routes/notificationRoutes");
 const preferenceRoutes = require("./src/routes/preferenceRoutes");
 
+const routePlannerRoutes = require("./src/routes/routePlannerRoutes");
+
+
 
 app.use(
   cors({
@@ -50,6 +53,7 @@ app.use("/api/v1/booking", bookingRoutes);
 app.use("/api/v1/coupon", couponRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+
 app.use("/api/v1/community/posts", postRoutes);
 app.use("/api/v1/community/posts/:postId/comments", commentRoutes);
 app.use("/api/v1/community/likes", likeRoutes);
@@ -61,8 +65,7 @@ app.use("/api/v1/admin/community", adminCommunityRoutes);
 
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/notifications/preferences", preferenceRoutes);
-
-
+app.use("/api/v1/route-planner", routePlannerRoutes);
 
 
 app.use(errorHandler);
