@@ -1,22 +1,97 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Grid3x3, Bookmark, MessageCircle, MapPin, Loader2, ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Bookmark,
+  CalendarDays,
+  Grid3x3,
+  Heart,
+  Loader2,
+  MapPin,
+  MessageCircle,
+  ShieldCheck,
+  Sparkles,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+
 import useProfile from "../../hooks/useProfile";
 import usePosts from "../../hooks/usePosts";
 import UserBadges from "../../components/profile/UserBadges";
 import { useAuth } from "../../components/context/AuthContext";
 
+const statThemes = [
+  {
+    label: "posts",
+    icon: Grid3x3,
+    accentText: "text-red-600 dark:text-red-400",
+    softBg: "bg-red-50 dark:bg-red-950/40",
+    softBorder: "border-red-100 dark:border-red-900/50",
+    iconColor: "text-red-500 dark:text-red-400",
+  },
+  {
+    label: "answers",
+    icon: MessageCircle,
+    accentText: "text-violet-600 dark:text-violet-400",
+    softBg: "bg-violet-50 dark:bg-violet-950/40",
+    softBorder: "border-violet-100 dark:border-violet-900/50",
+    iconColor: "text-violet-500 dark:text-violet-400",
+  },
+  {
+    label: "upvotes",
+    icon: Heart,
+    accentText: "text-amber-600 dark:text-amber-400",
+    softBg: "bg-amber-50 dark:bg-amber-950/40",
+    softBorder: "border-amber-100 dark:border-amber-900/50",
+    iconColor: "text-amber-500 dark:text-amber-400",
+  },
+];
+
+const tabThemes = {
+  posts: {
+    activeText: "text-red-600 dark:text-red-400",
+    activeBorder: "border-red-600 dark:border-red-400",
+    activeIcon: "text-red-600 dark:text-red-400",
+    hoverText:
+      "hover:text-red-500 dark:hover:text-red-400",
+  },
+  saved: {
+    activeText: "text-emerald-600 dark:text-emerald-400",
+    activeBorder:
+      "border-emerald-600 dark:border-emerald-400",
+    activeIcon:
+      "text-emerald-600 dark:text-emerald-400",
+    hoverText:
+      "hover:text-emerald-500 dark:hover:text-emerald-400",
+  },
+  answers: {
+    activeText: "text-violet-600 dark:text-violet-400",
+    activeBorder:
+      "border-violet-600 dark:border-violet-400",
+    activeIcon: "text-violet-600 dark:text-violet-400",
+    hoverText:
+      "hover:text-violet-500 dark:hover:text-violet-400",
+  },
+};
+
 const CommunityProfile = () => {
-  const { id } = useParams(); // URL me userId
+  const { id } = useParams();
   const { user: currentUser } = useAuth();
-  
-  const { profileData, savedPosts, loading, fetchProfile, fetchSavedPosts } = useProfile();
-  const { posts, fetchPosts, fetchPostsByUserId } = usePosts();
+
+  const {
+    profileData,
+    savedPosts,
+    loading,
+    fetchProfile,
+    fetchSavedPosts,
+  } = useProfile();
+
+  const { posts, fetchPosts } = usePosts();
 
   const [activeTab, setActiveTab] = useState("posts");
 
-  // Check if it's my own profile
-  const isMyProfile = !id || id === currentUser?._id;
+  const isMyProfile =
+    !id || id === currentUser?._id;
 
   useEffect(() => {
     if (isMyProfile) {
@@ -32,230 +107,520 @@ const CommunityProfile = () => {
     }
   }, [activeTab, isMyProfile, fetchSavedPosts]);
 
-
   if (loading && !profileData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="animate-spin text-red-600" size={40} />
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 transition-colors duration-300 dark:bg-slate-950">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-red-600 dark:text-red-400" />
+
+          <p className="text-sm font-bold text-slate-400 dark:text-slate-500">
+            Loading profile...
+          </p>
+        </div>
+      </main>
     );
   }
 
   if (!profileData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-slate-500 font-bold">Profile not found</p>
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 transition-colors duration-300 dark:bg-slate-950">
+        <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-red-100 bg-white p-8 text-center shadow-2xl shadow-red-500/10 dark:border-red-900/50 dark:bg-slate-900">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-red-200/40 blur-3xl dark:bg-red-900/20" />
+
+          <div className="relative">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400">
+              <Users className="h-7 w-7" />
+            </div>
+
+            <h2 className="mt-4 text-xl font-black text-slate-900 dark:text-white">
+              Profile not found
+            </h2>
+
+            <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-500 dark:text-slate-400">
+              This user profile doesn&apos;t exist or
+              has been removed.
+            </p>
+
+            <Link
+              to="/community"
+              className="mt-5 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-red-500/25 transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98]"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Community
+            </Link>
+          </div>
+        </div>
+      </main>
     );
   }
-  
+
   const { user, stats, badges } = profileData;
 
+  const userInitial =
+    user?.name?.charAt(0)?.toUpperCase() || "U";
+
+  const statValues = [
+    stats.postCount,
+    stats.commentCount,
+    stats.totalLikesReceived,
+  ];
+
+  const tabs = [
+    {
+      key: "posts",
+      label: "Posts",
+      icon: Grid3x3,
+      show: true,
+    },
+    {
+      key: "saved",
+      label: "Saved",
+      icon: Bookmark,
+      show: isMyProfile,
+    },
+    {
+      key: "answers",
+      label: "Answers",
+      icon: MessageCircle,
+      show: true,
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        
-        <Link 
-          to="/community" 
-          className="inline-flex items-center gap-2 text-slate-500 hover:text-red-600 font-bold mb-6 transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </Link>
+    <main className="min-h-screen bg-slate-50 transition-colors duration-300 dark:bg-slate-950">
+      {/* Compact top bar */}
+      <div className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/80 backdrop-blur-2xl dark:border-slate-800/60 dark:bg-slate-900/80">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          <div className="flex min-w-0 items-center gap-3">
+            <Link
+              to="/community"
+              className="group flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-red-900 dark:hover:text-red-400"
+            >
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
+            </Link>
 
-        {/* Profile Header Card */}
-        <div className="bg-white p-6 sm:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm mb-6">
-          
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            
-            {/* Avatar */}
-            <div className="relative shrink-0">
-              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-[2rem] bg-gradient-to-br from-red-500 to-red-600 p-1 shadow-lg">
-                <div className="w-full h-full rounded-[1.75rem] bg-white p-1">
-                  <img
-                    src={user.profileImage || `https://ui-avatars.com/api/?name=${user.name}&background=fee2e2&color=dc2626&size=200`}
-                    alt={user.name}
-                    className="w-full h-full object-cover rounded-[1.5rem]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Info & Stats */}
-            <div className="flex-1 w-full text-center sm:text-left">
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
+            <div className="min-w-0">
+              <h1 className="truncate text-sm font-black text-slate-900 dark:text-white sm:text-base">
                 {user.name}
               </h1>
-              {user.city && (
-                <p className="flex items-center justify-center sm:justify-start gap-1 text-slate-500 font-medium mt-1 text-sm">
-                  <MapPin size={14} />
-                  {user.city}
-                </p>
-              )}
-              <p className="text-xs text-slate-400 mt-1">Joined {new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-5 bg-slate-50 p-4 rounded-2xl">
-                <div className="text-center">
-                  <p className="text-xl sm:text-2xl font-black text-slate-900">{stats.postCount}</p>
-                  <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Posts</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
+                {stats.postCount} posts ·{" "}
+                {stats.totalLikesReceived} upvotes
+              </p>
+            </div>
+          </div>
+
+          {isMyProfile && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[9px] font-black text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400">
+              <ShieldCheck className="h-3 w-3" />
+              Your Profile
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-4xl px-4 py-5 sm:px-6 sm:py-7">
+        {/* Profile header */}
+        <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900 dark:shadow-black/20">
+          {/* Gradient banner */}
+          <div className="relative h-28 overflow-hidden bg-gradient-to-br from-red-600 via-red-500 to-orange-500 sm:h-36">
+            <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-white/15 blur-3xl" />
+
+            <div className="pointer-events-none absolute -bottom-20 right-0 h-56 w-56 rounded-full bg-orange-300/25 blur-3xl" />
+
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.06)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.06)_50%,rgba(255,255,255,0.06)_75%,transparent_75%,transparent)] [background-size:40px_40px] opacity-20" />
+
+            {/* Member badge */}
+            <div className="absolute right-4 top-4">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-xl">
+                <Sparkles className="h-3 w-3" />
+                TedBus Member
+              </span>
+            </div>
+          </div>
+
+          {/* Avatar — overlapping banner */}
+          <div className="relative px-5 pb-5 sm:px-6 sm:pb-6">
+            <div className="-mt-14 flex flex-col items-center gap-4 sm:-mt-16 sm:flex-row sm:items-end sm:gap-5">
+              {/* Avatar with gradient ring */}
+              <div className="shrink-0">
+                <div className="rounded-full bg-gradient-to-tr from-red-500 via-orange-500 to-amber-400 p-[3px] shadow-xl shadow-red-500/20">
+                  <div className="rounded-full bg-white p-[3px] dark:bg-slate-900">
+                    {user.profileImage ? (
+                      <img
+                        src={user.profileImage}
+                        alt={user.name}
+                        className="h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28"
+                      />
+                    ) : (
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-orange-500 text-3xl font-black text-white sm:h-28 sm:w-28 sm:text-4xl">
+                        {userInitial}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="text-center border-x border-slate-200">
-                  <p className="text-xl sm:text-2xl font-black text-slate-900">{stats.commentCount}</p>
-                  <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Answers</p>
+              </div>
+
+              {/* User info */}
+              <div className="flex-1 text-center sm:pb-1 sm:text-left">
+                <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
+                  <h1 className="text-xl font-black text-slate-900 dark:text-white sm:text-2xl">
+                    {user.name}
+                  </h1>
+
+                  {isMyProfile && (
+                    <Link
+                      to="/profile"
+                      className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-[10px] font-black text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-red-900 dark:hover:text-red-400"
+                    >
+                      Edit Profile
+                    </Link>
+                  )}
                 </div>
-                <div className="text-center">
-                  <p className="text-xl sm:text-2xl font-black text-red-600">{stats.totalLikesReceived}</p>
-                  <p className="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Upvotes</p>
+
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                  {user.city && (
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+                      <MapPin className="h-3.5 w-3.5 text-red-500 dark:text-red-400" />
+                      {user.city}
+                    </span>
+                  )}
+
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+                    <CalendarDays className="h-3.5 w-3.5 text-violet-500 dark:text-violet-400" />
+                    Joined{" "}
+                    {new Date(
+                      user.createdAt,
+                    ).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Badges Section */}
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <h3 className="text-sm font-black text-slate-800 mb-3 uppercase tracking-wider">🏆 Achievements</h3>
+            {/* Stats cards */}
+            <div className="mt-5 grid grid-cols-3 gap-2.5">
+              {statThemes.map((theme, index) => {
+                const StatIcon = theme.icon;
+
+                return (
+                  <div
+                    key={theme.label}
+                    className={`rounded-2xl border p-3 text-center transition hover:-translate-y-0.5 hover:shadow-md ${theme.softBorder} ${theme.softBg}`}
+                  >
+                    <div
+                      className={`mx-auto flex h-8 w-8 items-center justify-center rounded-xl ${theme.softBg}`}
+                    >
+                      <StatIcon
+                        className={`h-4 w-4 ${theme.iconColor}`}
+                      />
+                    </div>
+
+                    <p
+                      className={`mt-2 text-lg font-black ${theme.accentText}`}
+                    >
+                      {statValues[index] || 0}
+                    </p>
+
+                    <p className="text-[9px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      {theme.label}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Badges */}
+        {badges?.length > 0 && (
+          <div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <p className="mb-3 flex items-center gap-2 text-xs font-black text-slate-700 dark:text-slate-300">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              Achievements
+            </p>
+
             <UserBadges badges={badges} />
           </div>
-        </div>
+        )}
 
         {/* Tabs */}
-        <div className="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm mb-6 flex items-center gap-1">
-          <button
-            onClick={() => setActiveTab("posts")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
-              activeTab === "posts" ? "bg-red-50 text-red-600 shadow-sm" : "text-slate-500 hover:bg-slate-50"
-            }`}
-          >
-            <Grid3x3 size={16} />
-            <span className="hidden sm:inline">Posts</span>
-          </button>
-          
-          {isMyProfile && (
-            <button
-              onClick={() => setActiveTab("saved")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
-                activeTab === "saved" ? "bg-red-50 text-red-600 shadow-sm" : "text-slate-500 hover:bg-slate-50"
-              }`}
-            >
-              <Bookmark size={16} />
-              <span className="hidden sm:inline">Saved</span>
-            </button>
-          )}
+        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center border-b border-slate-100 dark:border-slate-800">
+            {tabs.map((tab) => {
+              if (!tab.show) return null;
 
-          <button
-            onClick={() => setActiveTab("answers")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
-              activeTab === "answers" ? "bg-red-50 text-red-600 shadow-sm" : "text-slate-500 hover:bg-slate-50"
-            }`}
-          >
-            <MessageCircle size={16} />
-            <span className="hidden sm:inline">Answers</span>
-          </button>
+              const TabIcon = tab.icon;
+              const theme = tabThemes[tab.key];
+              const active = activeTab === tab.key;
+
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex flex-1 items-center justify-center gap-1.5 border-b-2 py-3 text-[10px] font-black uppercase tracking-[0.14em] transition sm:text-xs ${
+                    active
+                      ? `${theme.activeBorder} ${theme.activeText}`
+                      : `border-transparent text-slate-400 dark:text-slate-500 ${theme.hoverText}`
+                  }`}
+                >
+                  <TabIcon
+                    className={`h-3.5 w-3.5 ${
+                      active
+                        ? theme.activeIcon
+                        : "text-slate-400 dark:text-slate-500"
+                    }`}
+                  />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Tab content */}
+          <div className="min-h-[300px]">
+            {activeTab === "posts" && (
+              <UserPostsGrid
+                userId={user._id}
+                isMyProfile={isMyProfile}
+              />
+            )}
+
+            {activeTab === "saved" && isMyProfile && (
+              <SavedPostsGrid
+                savedPosts={savedPosts}
+              />
+            )}
+
+            {activeTab === "answers" && (
+              <div className="flex flex-col items-center justify-center py-16">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-900/50 dark:bg-violet-950/40 dark:text-violet-400">
+                  <MessageCircle className="h-6 w-6" />
+                </div>
+
+                <p className="mt-4 text-sm font-black text-slate-700 dark:text-slate-300">
+                  Answers coming soon
+                </p>
+
+                <p className="mt-1 text-xs font-medium text-slate-400 dark:text-slate-500">
+                  Answer history will appear here.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Content Grid */}
-        <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm min-h-[300px]">
-          {activeTab === "posts" && (
-            <UserPostsGrid userId={user._id} isMyProfile={isMyProfile} />
-          )}
-          {activeTab === "saved" && isMyProfile && (
-            <SavedPostsGrid savedPosts={savedPosts} />
-          )}
-          {activeTab === "answers" && (
-            <div className="text-center py-16 text-slate-400 font-medium">
-              <MessageCircle size={40} className="mx-auto mb-3 text-slate-300" />
-              Answer history coming soon...
-            </div>
-          )}
-        </div>
-
       </div>
-    </div>
+    </main>
   );
 };
 
-// Helper Component: User Posts Grid
 const UserPostsGrid = ({ userId, isMyProfile }) => {
-  const { posts, loading, fetchPosts, fetchMyPosts, getMyPosts } = usePosts();
-  const [userPosts, setUserPosts] = useState([]);
+  const { posts, loading, fetchPosts } = usePosts();
 
   useEffect(() => {
-    const loadPosts = async () => {
-      if (isMyProfile) {
-        await fetchPosts({ author: userId }); 
-      } else {
-        // Simple filter fetch for now
-        await fetchPosts({ author: userId });
-      }
-    };
-    loadPosts();
-  }, [userId, isMyProfile]);
+    fetchPosts({ author: userId });
+  }, [userId, fetchPosts]);
 
-  if (loading) return <div className="text-center py-10"><Loader2 className="animate-spin mx-auto text-red-600" /></div>;
-  
-  const displayPosts = posts.filter(p => p.author?._id === userId);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="h-7 w-7 animate-spin text-red-600 dark:text-red-400" />
+      </div>
+    );
+  }
+
+  const displayPosts = posts.filter(
+    (p) => p.author?._id === userId,
+  );
 
   if (displayPosts.length === 0) {
     return (
-      <div className="text-center py-16 text-slate-400 font-medium">
-        <Grid3x3 size={40} className="mx-auto mb-3 text-slate-300" />
-        No posts yet
+      <div className="flex flex-col items-center justify-center py-16">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-red-100 bg-red-50 text-red-600 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+          <Grid3x3 className="h-6 w-6" />
+        </div>
+
+        <p className="mt-4 text-sm font-black text-slate-700 dark:text-slate-300">
+          No posts yet
+        </p>
+
+        <p className="mt-1 text-xs font-medium text-slate-400 dark:text-slate-500">
+          {isMyProfile
+            ? "Share your first travel experience!"
+            : "This user hasn't posted yet."}
+        </p>
+
+        {isMyProfile && (
+          <Link
+            to="/community/create"
+            className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-orange-500 px-4 py-2 text-xs font-black text-white shadow-lg shadow-red-500/25 transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98]"
+          >
+            <Sparkles className="h-3.5 w-3.5" />
+            Create Post
+          </Link>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2 sm:gap-4">
-      {displayPosts.map((post) => (
-        <Link 
-          key={post._id} 
-          to={`/community/post/${post._id}`}
-          className="aspect-square bg-slate-100 rounded-xl overflow-hidden relative group"
-        >
-          {post.images?.[0]?.url ? (
-            <img src={post.images[0].url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center p-3 bg-gradient-to-br from-red-50 to-red-100">
-              <p className="text-xs font-bold text-red-600 line-clamp-4 text-center">{post.title}</p>
+    <div className="grid grid-cols-3 gap-[2px] sm:gap-1">
+      {displayPosts.map((post, index) => {
+        const colors = [
+          "from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/20",
+          "from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20",
+          "from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20",
+          "from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20",
+          "from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/20",
+          "from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/20",
+        ];
+
+        const textColors = [
+          "text-red-600 dark:text-red-400",
+          "text-violet-600 dark:text-violet-400",
+          "text-emerald-600 dark:text-emerald-400",
+          "text-amber-600 dark:text-amber-400",
+          "text-cyan-600 dark:text-cyan-400",
+          "text-pink-600 dark:text-pink-400",
+        ];
+
+        const colorIndex = index % colors.length;
+
+        return (
+          <Link
+            key={post._id}
+            to={`/community/post/${post._id}`}
+            className="group relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"
+          >
+            {post.images?.[0]?.url ? (
+              <img
+                src={post.images[0].url}
+                alt={post.title}
+                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <div
+                className={`flex h-full w-full items-center justify-center bg-gradient-to-br p-3 ${colors[colorIndex]}`}
+              >
+                <p
+                  className={`line-clamp-4 text-center text-[10px] font-black leading-4 sm:text-xs ${textColors[colorIndex]}`}
+                >
+                  {post.title}
+                </p>
+              </div>
+            )}
+
+            {/* Hover overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/40 group-hover:opacity-100">
+              <div className="flex items-center gap-3 text-white">
+                <span className="flex items-center gap-1 text-sm font-black">
+                  <Heart className="h-4 w-4 fill-white" />
+                  {post.likes?.length ||
+                    post.likesCount ||
+                    0}
+                </span>
+
+                <span className="flex items-center gap-1 text-sm font-black">
+                  <MessageCircle className="h-4 w-4 fill-white" />
+                  {post.comments?.length ||
+                    post.commentCount ||
+                    0}
+                </span>
+              </div>
             </div>
-          )}
-        </Link>
-      ))}
+          </Link>
+        );
+      })}
     </div>
   );
 };
 
-// Helper Component: Saved Posts Grid
 const SavedPostsGrid = ({ savedPosts }) => {
   if (!savedPosts || savedPosts.length === 0) {
     return (
-      <div className="text-center py-16 text-slate-400 font-medium">
-        <Bookmark size={40} className="mx-auto mb-3 text-slate-300" />
-        No saved posts yet. Bookmark posts to see them here!
+      <div className="flex flex-col items-center justify-center py-16">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-emerald-100 bg-emerald-50 text-emerald-600 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-400">
+          <Bookmark className="h-6 w-6" />
+        </div>
+
+        <p className="mt-4 text-sm font-black text-slate-700 dark:text-slate-300">
+          No saved posts yet
+        </p>
+
+        <p className="mx-auto mt-1 max-w-xs text-center text-xs font-medium text-slate-400 dark:text-slate-500">
+          Bookmark posts to see them here for quick
+          access.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2 sm:gap-4">
-      {savedPosts.map((saved) => (
-        saved.post && (
-          <Link 
-            key={saved._id} 
+    <div className="grid grid-cols-3 gap-[2px] sm:gap-1">
+      {savedPosts.map((saved, index) => {
+        if (!saved.post) return null;
+
+        const colors = [
+          "from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20",
+          "from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/20",
+          "from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20",
+          "from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20",
+          "from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/20",
+          "from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/20",
+        ];
+
+        const textColors = [
+          "text-emerald-600 dark:text-emerald-400",
+          "text-cyan-600 dark:text-cyan-400",
+          "text-violet-600 dark:text-violet-400",
+          "text-amber-600 dark:text-amber-400",
+          "text-pink-600 dark:text-pink-400",
+          "text-red-600 dark:text-red-400",
+        ];
+
+        const colorIndex = index % colors.length;
+
+        return (
+          <Link
+            key={saved._id}
             to={`/community/post/${saved.post._id}`}
-            className="aspect-square bg-slate-100 rounded-xl overflow-hidden relative group"
+            className="group relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800"
           >
             {saved.post.images?.[0]?.url ? (
-              <img src={saved.post.images[0].url} alt={saved.post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+              <img
+                src={saved.post.images[0].url}
+                alt={saved.post.title}
+                className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+              />
             ) : (
-              <div className="w-full h-full flex items-center justify-center p-3 bg-gradient-to-br from-red-50 to-red-100">
-                <p className="text-xs font-bold text-red-600 line-clamp-4 text-center">{saved.post.title}</p>
+              <div
+                className={`flex h-full w-full items-center justify-center bg-gradient-to-br p-3 ${colors[colorIndex]}`}
+              >
+                <p
+                  className={`line-clamp-4 text-center text-[10px] font-black leading-4 sm:text-xs ${textColors[colorIndex]}`}
+                >
+                  {saved.post.title}
+                </p>
               </div>
             )}
+
+            {/* Hover overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/40 group-hover:opacity-100">
+              <div className="flex items-center gap-2 text-white">
+                <Bookmark className="h-5 w-5 fill-white" />
+
+                <span className="text-sm font-black">
+                  Saved
+                </span>
+              </div>
+            </div>
           </Link>
-        )
-      ))}
+        );
+      })}
     </div>
   );
 };

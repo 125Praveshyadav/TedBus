@@ -36,9 +36,13 @@ const CommentCard = ({ comment, postId }) => {
   return (
     <div className="flex gap-3">
       {/* Avatar */}
-      <div className="w-10 h-10 rounded-2xl overflow-hidden bg-red-50 border-2 border-white shadow-sm shrink-0 mt-1">
+      <div className="w-10 h-10 rounded-2xl overflow-hidden bg-red-50 dark:bg-red-900/30 border-2 border-white shadow-sm shrink-0 mt-1">
         {comment.author?.profileImage ? (
-          <img src={comment.author.profileImage} alt="" className="w-full h-full object-cover" />
+          <img
+            src={comment.author.profileImage}
+            alt=""
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-red-600 font-black">
             {authorInitial}
@@ -48,16 +52,18 @@ const CommentCard = ({ comment, postId }) => {
 
       <div className="flex-1">
         {/* Comment Bubble */}
-        <div className="bg-slate-50 border border-slate-100 rounded-[1.5rem] rounded-tl-md px-4 py-3">
+        <div className="bg-slate-50 dark:bg-slate-950 border  border-slate-100 dark:border-slate-800 rounded-[1.5rem] rounded-tl-md px-4 py-3">
           <div className="flex items-center justify-between mb-1">
-            <span className="font-black text-slate-800 text-sm">
+            <span className="font-black text-slate-800 dark:text-slate-200 text-sm">
               {comment.author?.name}
             </span>
             <span className="text-xs text-slate-400 font-medium">
-              {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(comment.createdAt), {
+                addSuffix: true,
+              })}
             </span>
           </div>
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {comment.text}
           </p>
         </div>
@@ -80,9 +86,13 @@ const CommentCard = ({ comment, postId }) => {
           {comment.commentCount > 0 || commentReplies.length > 0 ? (
             <button
               onClick={handleShowReplies}
-              className="flex items-center gap-1 text-xs font-bold text-red-500 hover:text-red-600 transition-colors"
+              className="flex items-center gap-1 text-xs font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             >
-              {repliesVisible ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+              {repliesVisible ? (
+                <ChevronUp size={13} />
+              ) : (
+                <ChevronDown size={13} />
+              )}
               {repliesVisible ? "Hide replies" : `View replies`}
             </button>
           ) : null}
@@ -101,12 +111,16 @@ const CommentCard = ({ comment, postId }) => {
 
         {/* Replies List */}
         {repliesVisible && commentReplies.length > 0 && (
-          <div className="mt-3 pl-4 border-l-2 border-red-100 flex flex-col gap-3">
+          <div className="mt-3 pl-4 border-l-2 border-red-100 dark:border-red-900/50 flex flex-col gap-3">
             {commentReplies.map((reply) => (
               <div key={reply._id} className="flex gap-3">
-                <div className="w-8 h-8 rounded-xl overflow-hidden bg-red-50 shrink-0">
+                <div className="w-8 h-8 rounded-xl overflow-hidden bg-red-50 dark:bg-red-900/30 shrink-0">
                   {reply.author?.profileImage ? (
-                    <img src={reply.author.profileImage} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={reply.author.profileImage}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-red-600 font-black text-xs">
                       {reply.author?.name?.charAt(0).toUpperCase()}
@@ -114,16 +128,20 @@ const CommentCard = ({ comment, postId }) => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="bg-white border border-slate-100 rounded-[1.25rem] rounded-tl-md px-4 py-2.5">
+                  <div className="bg-white dark:bg-slate-900 border  border-slate-100 dark:border-slate-800 rounded-[1.25rem] rounded-tl-md px-4 py-2.5">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-black text-slate-800 text-xs">
+                      <span className="font-black text-slate-800 dark:text-slate-200 text-xs">
                         {reply.author?.name}
                       </span>
                       <span className="text-xs text-slate-400">
-                        {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(reply.createdAt), {
+                          addSuffix: true,
+                        })}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-700">{reply.text}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300">
+                      {reply.text}
+                    </p>
                   </div>
                 </div>
               </div>

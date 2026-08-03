@@ -161,7 +161,7 @@ const OtpVerification = () => {
       setResendLoading(true);
 
       toast.info(
-        "Resend OTP API is not added yet. Please register again if OTP expired."
+        "Resend OTP API is not added yet. Please register again if OTP expired.",
       );
 
       setTimer(60);
@@ -173,24 +173,24 @@ const OtpVerification = () => {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 px-4 py-10">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 px-4 py-10">
       {/* Background */}
       <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-red-200/50 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-orange-100/70 blur-3xl" />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl shadow-slate-900/10">
+      <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl shadow-slate-900/10">
         {/* Top */}
         <div className="bg-gradient-to-br from-red-600 via-red-500 to-orange-500 p-6 text-white">
           <Link
             to="/register"
-            className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-bold backdrop-blur transition hover:bg-white/25"
+            className="mb-6 inline-flex items-center gap-2 rounded-full bg-white dark:bg-slate-900/15 px-4 py-2 text-sm font-bold backdrop-blur transition hover:bg-white dark:bg-slate-900/25"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
           </Link>
 
           <div className="text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-white text-red-600 shadow-lg">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-white dark:bg-slate-900 text-red-600 shadow-lg">
               <Bus className="h-9 w-9" />
             </div>
 
@@ -205,20 +205,20 @@ const OtpVerification = () => {
         </div>
 
         <div className="p-6 sm:p-8">
-          <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 p-4 text-center">
+          <div className="mb-6 rounded-2xl border border-red-100 dark:border-red-900/50 bg-red-50 dark:bg-red-900/30 p-4 text-center">
             <MailCheck className="mx-auto h-7 w-7 text-red-600" />
 
             <p className="mt-2 text-xs font-black uppercase tracking-wider text-red-600">
               OTP sent to
             </p>
 
-            <p className="mt-1 break-all text-sm font-black text-slate-900">
+            <p className="mt-1 break-all text-sm font-black text-slate-900 dark:text-white">
               {email || "Email not found"}
             </p>
           </div>
 
           {error && (
-            <div className="mb-5 rounded-2xl border border-red-100 bg-red-50 p-4">
+            <div className="mb-5 rounded-2xl border border-red-100 dark:border-red-900/50 bg-red-50 dark:bg-red-900/30 p-4">
               <p className="flex items-start gap-2 text-sm font-bold text-red-700">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                 {error}
@@ -242,8 +242,10 @@ const OtpVerification = () => {
                   onChange={(e) => handleChange(e.target.value, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
                   onPaste={handlePaste}
-                  className={`h-14 w-11 rounded-2xl border-2 bg-slate-50 text-center text-xl font-black text-slate-900 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10 sm:w-12 ${
-                    error ? "border-red-300" : "border-slate-200"
+                  className={`h-14 w-11 rounded-2xl border-2 bg-slate-50 dark:bg-slate-950 text-center text-xl font-black text-slate-900 dark:text-white outline-none transition focus:border-red-500 focus:bg-white dark:bg-slate-900 focus:ring-4 focus:ring-red-500/10 sm:w-12 ${
+                    error
+                      ? "border-red-300"
+                      : "border-slate-200 dark:border-slate-700"
                   }`}
                 />
               ))}
@@ -275,7 +277,7 @@ const OtpVerification = () => {
           {/* Resend */}
           <div className="mt-6 text-center">
             {timer > 0 ? (
-              <p className="text-sm font-semibold text-slate-500">
+              <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
                 Resend OTP in{" "}
                 <span className="font-black text-red-600">{timer}s</span>
               </p>
@@ -286,9 +288,7 @@ const OtpVerification = () => {
                 disabled={resendLoading}
                 className="inline-flex items-center justify-center gap-2 text-sm font-black text-red-600 transition hover:text-red-700 hover:underline disabled:opacity-60"
               >
-                {resendLoading && (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                )}
+                {resendLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 Resend OTP
               </button>
             )}
@@ -301,7 +301,7 @@ const OtpVerification = () => {
             </p>
           </div>
 
-          <p className="mt-6 text-center text-sm font-semibold text-slate-500">
+          <p className="mt-6 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
             Wrong email?{" "}
             <Link
               to="/register"

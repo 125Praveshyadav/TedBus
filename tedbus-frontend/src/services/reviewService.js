@@ -1,23 +1,46 @@
 import api from "./api";
 
-const REVIEW_BASE = "/reviews";
-
-export const createReview = async (reviewData) => {
-  return api.post(`${REVIEW_BASE}`, reviewData);
+const createReview = async (payload) => {
+  const res = await api.post("/reviews", payload);
+  return res.data || res;
 };
 
-export const getBusReviews = async (busId) => {
-  return api.get(`${REVIEW_BASE}/bus/${busId}`);
+const editReview = async (id, payload) => {
+  const res = await api.put(`/reviews/${id}`, payload);
+  return res.data || res;
 };
 
-export const getMyReviews = async () => {
-  return api.get(`${REVIEW_BASE}/my-reviews`);
+const getBusReviews = async (busId, params = {}) => {
+  const res = await api.get(`/reviews/bus/${busId}`, { params });
+  return res.data || res;
 };
 
-export const reviewService = {
+const checkCanReview = async (bookingId) => {
+  const res = await api.get(`/reviews/check/${bookingId}`);
+  return res.data || res;
+};
+
+const upvoteReview = async (id) => {
+  const res = await api.post(`/reviews/${id}/upvote`);
+  return res.data || res;
+};
+
+const reportReview = async (id) => {
+  const res = await api.post(`/reviews/${id}/report`);
+  return res.data || res;
+};
+
+const getMyReviews = async () => {
+  const res = await api.get("/reviews/my-reviews");
+  return res.data || res;
+};
+
+export default {
   createReview,
+  editReview,
   getBusReviews,
+  checkCanReview,
+  upvoteReview,
+  reportReview,
   getMyReviews,
 };
-
-export default reviewService;

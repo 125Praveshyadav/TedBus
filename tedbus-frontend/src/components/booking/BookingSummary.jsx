@@ -74,16 +74,13 @@ const sortSeats = (seats = []) => {
 const normalizePassengerList = (
   selectedSeats = [],
   passengers = {},
-  contactDetails = {}
+  contactDetails = {},
 ) => {
   if (Array.isArray(passengers)) {
     return passengers.map((passenger, index) => ({
       ...passenger,
       seatNo:
-        passenger.seatNo ||
-        passenger.seatNumber ||
-        selectedSeats[index] ||
-        "",
+        passenger.seatNo || passenger.seatNumber || selectedSeats[index] || "",
       email: passenger.email || contactDetails.email || "",
       phone: passenger.phone || contactDetails.phone || "",
     }));
@@ -122,18 +119,13 @@ const BookingSummary = ({
   const [creatingBooking, setCreatingBooking] = useState(false);
   const [error, setError] = useState("");
 
-  // Coupon state
   const [couponCode, setCouponCode] = useState("");
   const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [couponError, setCouponError] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState(
-    appliedCouponProp || null
-  );
+  const [appliedCoupon, setAppliedCoupon] = useState(appliedCouponProp || null);
 
-  const sortedSeats = useMemo(() => {
-    return sortSeats(selectedSeats);
-  }, [selectedSeats]);
+  const sortedSeats = useMemo(() => sortSeats(selectedSeats), [selectedSeats]);
 
   const passengerList = useMemo(() => {
     return normalizePassengerList(sortedSeats, passengers, contactDetails);
@@ -147,20 +139,20 @@ const BookingSummary = ({
       busDetails?.fare ||
       busDetails?.ticketPrice ||
       busDetails?.baseFare ||
-      0
+      0,
   );
 
   const totalSeats = sortedSeats.length;
   const baseFare = Number(fare?.baseFare ?? pricePerSeat * totalSeats);
   const gst = Number(fare?.gst ?? Math.round(baseFare * GST_RATE));
   const platformFee = Number(
-    fare?.platformFee ?? (totalSeats > 0 ? DEFAULT_PLATFORM_FEE : 0)
+    fare?.platformFee ?? (totalSeats > 0 ? DEFAULT_PLATFORM_FEE : 0),
   );
 
   const grossTotal = baseFare + gst + platformFee;
 
   const discountAmount = Number(
-    appliedCoupon?.discountAmount || appliedCoupon?.discount || 0
+    appliedCoupon?.discountAmount || appliedCoupon?.discount || 0,
   );
 
   const payableAmount = Math.max(grossTotal - discountAmount, 0);
@@ -218,15 +210,10 @@ const BookingSummary = ({
         amount: grossTotal,
       });
 
-      const responseCoupon =
-        response?.coupon ||
-        response?.data?.coupon ||
-        null;
+      const responseCoupon = response?.coupon || response?.data?.coupon || null;
 
       const responseDiscount = Number(
-        response?.discountAmount ||
-          response?.data?.discountAmount ||
-          0
+        response?.discountAmount || response?.data?.discountAmount || 0,
       );
 
       if (!responseCoupon || responseDiscount <= 0) {
@@ -240,7 +227,7 @@ const BookingSummary = ({
       });
 
       setCouponMessage(
-        response?.message || `Coupon applied. You saved ₹${responseDiscount}`
+        response?.message || `Coupon applied. You saved ₹${responseDiscount}`,
       );
     } catch (err) {
       setCouponError(err?.message || "Unable to apply coupon");
@@ -280,12 +267,12 @@ const BookingSummary = ({
         !passenger.gender ||
         !passenger.seatNo ||
         !passenger.email ||
-        !passenger.phone
+        !passenger.phone,
     );
 
     if (invalidPassenger) {
       setError(
-        "Passenger details are incomplete. Name, email, phone, age and gender are required."
+        "Passenger details are incomplete. Name, email, phone, age and gender are required.",
       );
       return false;
     }
@@ -344,10 +331,7 @@ const BookingSummary = ({
       const response = await bookingService.createBooking(bookingPayload);
 
       const booking =
-        response?.booking ||
-        response?.data?.booking ||
-        response?.data ||
-        null;
+        response?.booking || response?.data?.booking || response?.data || null;
 
       const bookingId =
         booking?._id ||
@@ -390,20 +374,20 @@ const BookingSummary = ({
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-3">
+    <div className="grid gap-5 lg:grid-cols-3 lg:gap-6">
       {/* Left Side */}
-      <div className="space-y-6 lg:col-span-2">
+      <div className="space-y-5 lg:col-span-2">
         {/* Trip Summary */}
-        <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
-          <div className="bg-gradient-to-br from-red-600 via-red-500 to-orange-500 p-6 text-white">
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="bg-gradient-to-br from-red-600 via-red-500 to-orange-500 p-5 text-white dark:from-red-700 dark:via-red-600 dark:to-orange-600 sm:p-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-bold backdrop-blur">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold backdrop-blur sm:text-sm">
                   <Ticket className="h-4 w-4" />
                   Booking Summary
                 </div>
 
-                <h2 className="text-3xl font-black tracking-tight">
+                <h2 className="text-2xl font-black tracking-tight sm:text-3xl">
                   Review Your Journey
                 </h2>
 
@@ -412,101 +396,103 @@ const BookingSummary = ({
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-white/15 px-4 py-3 text-sm font-black backdrop-blur">
+              <div className="shrink-0 rounded-2xl bg-white/15 px-4 py-3 text-sm font-black backdrop-blur">
                 {totalSeats} Seat{totalSeats === 1 ? "" : "s"}
               </div>
             </div>
           </div>
 
-          <div className="p-6">
+          <div className="p-5 sm:p-6">
             {/* Bus Details */}
-            <div className="rounded-[1.5rem] border border-slate-100 bg-slate-50 p-5">
+            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950 sm:p-5">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <div className="flex items-center gap-2 text-sm font-black text-red-600">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 text-sm font-black text-red-600 dark:text-red-400">
                     <BusFront className="h-4 w-4" />
                     Bus Details
                   </div>
 
-                  <h3 className="mt-2 text-2xl font-black text-slate-900">
+                  <h3 className="mt-2 truncate text-xl font-black text-slate-900 dark:text-white sm:text-2xl">
                     {busName}
                   </h3>
 
-                  <p className="mt-1 text-sm font-bold text-slate-500">
+                  <p className="mt-1 text-sm font-bold text-slate-500 dark:text-slate-400">
                     {busType}
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-white px-4 py-3 text-sm font-black text-slate-700 shadow-sm">
+                <div className="shrink-0 rounded-2xl bg-white px-4 py-3 text-sm font-black text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-200">
                   ID: {busId || "N/A"}
                 </div>
               </div>
 
-              <div className="mt-6 grid gap-5 md:grid-cols-[1fr_auto_1fr] md:items-center">
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+              <div className="mt-5 grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+                <div className="rounded-2xl bg-white p-4 dark:bg-slate-900">
+                  <p className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     From
                   </p>
-                  <h4 className="mt-2 text-xl font-black text-slate-900">
+                  <h4 className="mt-2 text-lg font-black text-slate-900 dark:text-white sm:text-xl">
                     {source}
                   </h4>
-                  <p className="mt-1 flex items-center gap-2 text-xs font-bold text-slate-500">
-                    <Clock3 className="h-4 w-4 text-red-600" />
+                  <p className="mt-1 flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
+                    <Clock3 className="h-4 w-4 text-red-600 dark:text-red-400" />
                     {departure}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-center">
-                  <div className="flex flex-col items-center">
-                    <div className="h-px w-20 bg-slate-300 md:w-28" />
-                    <span className="my-2 rounded-full bg-red-50 px-3 py-1 text-xs font-black text-red-600">
+                  <div className="flex w-full flex-row items-center justify-center gap-2 md:flex-col md:gap-0">
+                    <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700 md:hidden" />
+                    <div className="hidden h-px w-20 bg-slate-300 dark:bg-slate-700 md:block md:w-28" />
+                    <span className="my-0 whitespace-nowrap rounded-full bg-red-50 px-3 py-1 text-xs font-black text-red-600 dark:bg-red-950/40 dark:text-red-400 md:my-2">
                       {duration}
                     </span>
-                    <div className="h-px w-20 bg-slate-300 md:w-28" />
+                    <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700 md:hidden" />
+                    <div className="hidden h-px w-20 bg-slate-300 dark:bg-slate-700 md:block md:w-28" />
                   </div>
                 </div>
 
-                <div className="rounded-2xl bg-white p-4 md:text-right">
-                  <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+                <div className="rounded-2xl bg-white p-4 dark:bg-slate-900 md:text-right">
+                  <p className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     To
                   </p>
-                  <h4 className="mt-2 text-xl font-black text-slate-900">
+                  <h4 className="mt-2 text-lg font-black text-slate-900 dark:text-white sm:text-xl">
                     {destination}
                   </h4>
-                  <p className="mt-1 flex items-center gap-2 text-xs font-bold text-slate-500 md:justify-end">
-                    <Clock3 className="h-4 w-4 text-red-600" />
+                  <p className="mt-1 flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 md:justify-end">
+                    <Clock3 className="h-4 w-4 text-red-600 dark:text-red-400" />
                     {arrival}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 md:grid-cols-3">
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl bg-white p-4 dark:bg-slate-900">
+                  <p className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Journey Date
                   </p>
-                  <p className="mt-1 flex items-center gap-2 text-sm font-black text-slate-800">
-                    <CalendarDays className="h-4 w-4 text-red-600" />
+                  <p className="mt-1 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-100">
+                    <CalendarDays className="h-4 w-4 shrink-0 text-red-600 dark:text-red-400" />
                     {formatJourneyDate(journeyDate || busDetails?.journeyDate)}
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+                <div className="rounded-2xl bg-white p-4 dark:bg-slate-900">
+                  <p className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Boarding
                   </p>
-                  <p className="mt-1 flex items-center gap-2 text-sm font-black text-slate-800">
-                    <MapPin className="h-4 w-4 text-red-600" />
+                  <p className="mt-1 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-100">
+                    <MapPin className="h-4 w-4 shrink-0 text-red-600 dark:text-red-400" />
                     {boardingPoint || "Not selected"}
                   </p>
                 </div>
 
-                <div className="rounded-2xl bg-white p-4">
-                  <p className="text-xs font-black uppercase tracking-wider text-slate-400">
+                <div className="rounded-2xl bg-white p-4 dark:bg-slate-900">
+                  <p className="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
                     Dropping
                   </p>
-                  <p className="mt-1 flex items-center gap-2 text-sm font-black text-slate-800">
-                    <MapPin className="h-4 w-4 text-red-600" />
+                  <p className="mt-1 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-100">
+                    <MapPin className="h-4 w-4 shrink-0 text-red-600 dark:text-red-400" />
                     {droppingPoint || "Not selected"}
                   </p>
                 </div>
@@ -514,25 +500,25 @@ const BookingSummary = ({
             </div>
 
             {/* Selected Seats */}
-            <div className="mt-6 border-t border-slate-100 pt-6">
-              <h3 className="flex items-center gap-2 text-lg font-black text-slate-900">
-                <Armchair className="h-5 w-5 text-red-600" />
+            <div className="mt-5 border-t border-slate-100 pt-5 dark:border-slate-800">
+              <h3 className="flex items-center gap-2 text-base font-black text-slate-900 dark:text-white sm:text-lg">
+                <Armchair className="h-5 w-5 text-red-600 dark:text-red-400" />
                 Selected Seats ({sortedSeats.length})
               </h3>
 
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {sortedSeats.length > 0 ? (
                   sortedSeats.map((seat) => (
                     <span
                       key={seat}
-                      className="inline-flex items-center gap-1 rounded-xl bg-red-600 px-4 py-2 text-sm font-black text-white"
+                      className="inline-flex items-center gap-1 rounded-xl bg-red-600 px-3 py-1.5 text-sm font-black text-white"
                     >
                       <CheckCircle2 className="h-4 w-4" />
                       {seat}
                     </span>
                   ))
                 ) : (
-                  <p className="text-sm font-semibold text-slate-400">
+                  <p className="text-sm font-semibold text-slate-400 dark:text-slate-500">
                     No seats selected
                   </p>
                 )}
@@ -540,31 +526,30 @@ const BookingSummary = ({
             </div>
 
             {/* Passengers */}
-            <div className="mt-6 border-t border-slate-100 pt-6">
-              <h3 className="flex items-center gap-2 text-lg font-black text-slate-900">
-                <UserRound className="h-5 w-5 text-red-600" />
+            <div className="mt-5 border-t border-slate-100 pt-5 dark:border-slate-800">
+              <h3 className="flex items-center gap-2 text-base font-black text-slate-900 dark:text-white sm:text-lg">
+                <UserRound className="h-5 w-5 text-red-600 dark:text-red-400" />
                 Passengers ({passengerList.length})
               </h3>
 
-              <div className="mt-4 space-y-3">
+              <div className="mt-3 space-y-3">
                 {passengerList.map((passenger) => (
                   <div
                     key={passenger.seatNo}
-                    className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950 sm:flex-row sm:items-center sm:justify-between"
                   >
-                    <div>
-                      <p className="text-base font-black text-slate-900">
+                    <div className="min-w-0">
+                      <p className="truncate text-base font-black text-slate-900 dark:text-white">
                         {passenger.name || "Passenger Name Missing"}
                       </p>
 
-                      <p className="mt-1 text-xs font-semibold text-slate-500">
-                        Seat {passenger.seatNo} • Age:{" "}
-                        {passenger.age || "N/A"} •{" "}
-                        {passenger.gender || "N/A"}
+                      <p className="mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                        Seat {passenger.seatNo} • Age: {passenger.age || "N/A"}{" "}
+                        • {passenger.gender || "N/A"}
                       </p>
                     </div>
 
-                    <div className="rounded-xl bg-white px-4 py-2 text-sm font-black text-slate-800 shadow-sm">
+                    <div className="shrink-0 rounded-xl bg-white px-4 py-2 text-sm font-black text-slate-800 shadow-sm dark:bg-slate-900 dark:text-slate-200">
                       ₹{formatCurrency(pricePerSeat)}
                     </div>
                   </div>
@@ -575,13 +560,13 @@ const BookingSummary = ({
         </section>
 
         {/* Important Info */}
-        <section className="rounded-[2rem] border border-blue-100 bg-blue-50 p-6">
-          <h4 className="flex items-center gap-2 text-lg font-black text-blue-900">
+        <section className="rounded-3xl border border-blue-100 bg-blue-50 p-5 dark:border-blue-900/40 dark:bg-blue-950/30 sm:p-6">
+          <h4 className="flex items-center gap-2 text-base font-black text-blue-900 dark:text-blue-200 sm:text-lg">
             <ShieldCheck className="h-5 w-5" />
             Important Information
           </h4>
 
-          <ul className="mt-4 grid gap-3 text-sm font-semibold text-blue-800 md:grid-cols-2">
+          <ul className="mt-4 grid gap-3 text-sm font-semibold text-blue-800 dark:text-blue-300 sm:grid-cols-2">
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
               Carry a valid ID proof during journey.
@@ -607,51 +592,55 @@ const BookingSummary = ({
 
       {/* Right Side */}
       <aside className="lg:col-span-1">
-        <div className="sticky top-24 overflow-hidden rounded-[2rem] border border-red-100 bg-white shadow-sm">
-          <div className="bg-slate-900 p-6 text-white">
-            <h3 className="text-xl font-black">Price Breakdown</h3>
+        <div className="sticky top-6 overflow-hidden rounded-3xl border border-red-100 bg-white shadow-sm dark:border-red-900/50 dark:bg-slate-900">
+          <div className="bg-slate-900 p-5 text-white dark:bg-slate-950 sm:p-6">
+            <h3 className="text-lg font-black sm:text-xl">Price Breakdown</h3>
 
             <p className="mt-1 text-sm font-semibold text-slate-300">
               Transparent fare details
             </p>
           </div>
 
-          <div className="p-6">
+          <div className="p-5 sm:p-6">
             {error && (
-              <div className="mb-5 rounded-2xl border border-red-100 bg-red-50 p-4">
-                <p className="flex items-start gap-2 text-sm font-bold text-red-700">
+              <div className="mb-5 rounded-2xl border border-red-100 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/30">
+                <p className="flex items-start gap-2 text-sm font-bold text-red-700 dark:text-red-400">
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
                   {error}
                 </p>
               </div>
             )}
 
-            <div className="space-y-4 border-b border-slate-100 pb-5 text-sm">
+            <div className="space-y-3 border-b border-slate-100 pb-5 text-sm dark:border-slate-800">
               <div className="flex justify-between gap-4">
-                <span className="text-slate-500">
+                <span className="text-slate-500 dark:text-slate-400">
                   Base Fare ({totalSeats} × ₹{formatCurrency(pricePerSeat)})
                 </span>
-                <span className="font-black text-slate-900">
+                <span className="font-black text-slate-900 dark:text-white">
                   ₹{formatCurrency(baseFare)}
                 </span>
               </div>
 
               <div className="flex justify-between gap-4">
-                <span className="text-slate-500">GST (5%)</span>
-                <span className="font-black text-slate-900">
+                <span className="text-slate-500 dark:text-slate-400">
+                  GST (5%)
+                </span>
+                <span className="font-black text-slate-900 dark:text-white">
                   ₹{formatCurrency(gst)}
                 </span>
               </div>
 
               <div className="flex justify-between gap-4">
-                <span className="text-slate-500">Platform Fee</span>
-                <span className="font-black text-slate-900">
+                <span className="text-slate-500 dark:text-slate-400">
+                  Platform Fee
+                </span>
+                <span className="font-black text-slate-900 dark:text-white">
                   ₹{formatCurrency(platformFee)}
                 </span>
               </div>
 
               {discountAmount > 0 && (
-                <div className="flex justify-between gap-4 text-green-700">
+                <div className="flex justify-between gap-4 text-green-700 dark:text-green-400">
                   <span className="flex items-center gap-1 font-bold">
                     <BadgePercent className="h-4 w-4" />
                     Discount
@@ -667,8 +656,8 @@ const BookingSummary = ({
 
             {/* COUPON SECTION */}
             <div className="my-5">
-              <p className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-500">
-                <Tag className="h-3.5 w-3.5 text-red-600" />
+              <p className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <Tag className="h-3.5 w-3.5 text-red-600 dark:text-red-400" />
                 Apply Coupon
               </p>
 
@@ -682,8 +671,10 @@ const BookingSummary = ({
                         setCouponCode(e.target.value.toUpperCase())
                       }
                       placeholder="Enter coupon code"
-                      className={`w-full rounded-xl border bg-slate-50 px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-slate-800 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10 ${
-                        couponError ? "border-red-300" : "border-slate-200"
+                      className={`w-full min-w-0 rounded-xl border bg-slate-50 px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-slate-800 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10 dark:bg-slate-950 dark:text-slate-200 dark:focus:border-red-500 ${
+                        couponError
+                          ? "border-red-300 dark:border-red-800"
+                          : "border-slate-200 dark:border-slate-700"
                       }`}
                     />
 
@@ -691,7 +682,7 @@ const BookingSummary = ({
                       type="button"
                       onClick={handleApplyCoupon}
                       disabled={applyingCoupon}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-black text-white shadow-md shadow-red-500/20 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-black text-white shadow-md shadow-red-500/20 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       {applyingCoupon ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -702,31 +693,31 @@ const BookingSummary = ({
                   </div>
 
                   {couponError && (
-                    <p className="flex items-center gap-1 text-xs font-bold text-red-600">
+                    <p className="flex items-center gap-1 text-xs font-bold text-red-600 dark:text-red-400">
                       <AlertCircle className="h-3.5 w-3.5" />
                       {couponError}
                     </p>
                   )}
 
-                  <p className="text-[11px] font-medium text-slate-400">
+                  <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500">
                     Find active offers in the Offers section.
                   </p>
                 </div>
               ) : (
-                <div className="rounded-2xl border border-green-100 bg-green-50 p-3">
+                <div className="rounded-2xl border border-green-100 bg-green-50 p-3 dark:border-green-900/40 dark:bg-green-950/30">
                   <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="flex items-center gap-2 text-sm font-black text-green-700">
-                        <CheckCircle2 className="h-4 w-4" />
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-2 text-sm font-black text-green-700 dark:text-green-400">
+                        <CheckCircle2 className="h-4 w-4 shrink-0" />
                         {appliedCoupon.code} applied
                       </p>
 
-                      <p className="mt-1 text-xs font-bold text-green-800">
+                      <p className="mt-1 text-xs font-bold text-green-800 dark:text-green-300">
                         You saved ₹{formatCurrency(discountAmount)}
                       </p>
 
                       {couponMessage && (
-                        <p className="mt-1 text-[11px] font-semibold text-green-700">
+                        <p className="mt-1 text-[11px] font-semibold text-green-700 dark:text-green-400">
                           {couponMessage}
                         </p>
                       )}
@@ -735,7 +726,7 @@ const BookingSummary = ({
                     <button
                       type="button"
                       onClick={handleRemoveCoupon}
-                      className="rounded-xl bg-white p-2 text-red-600 transition hover:bg-red-50"
+                      className="shrink-0 rounded-xl bg-white p-2 text-red-600 transition hover:bg-red-50 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-950/40"
                       title="Remove coupon"
                     >
                       <X className="h-4 w-4" />
@@ -745,12 +736,12 @@ const BookingSummary = ({
               )}
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-5">
-              <span className="text-lg font-black text-slate-900">
+            <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-5 dark:border-slate-800">
+              <span className="text-base font-black text-slate-900 dark:text-white sm:text-lg">
                 Payable Amount
               </span>
 
-              <span className="text-3xl font-black text-red-600">
+              <span className="text-2xl font-black text-red-600 dark:text-red-400 sm:text-3xl">
                 ₹{formatCurrency(payableAmount)}
               </span>
             </div>
@@ -761,8 +752,8 @@ const BookingSummary = ({
               disabled={creatingBooking || totalSeats === 0}
               className={`mt-6 flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-black transition ${
                 creatingBooking || totalSeats === 0
-                  ? "cursor-not-allowed bg-slate-200 text-slate-400"
-                  : "bg-red-600 text-white shadow-lg shadow-red-500/25 hover:bg-red-700 active:scale-[0.98]"
+                  ? "cursor-not-allowed bg-slate-200 text-slate-400 dark:bg-slate-800 dark:text-slate-600"
+                  : "bg-red-600 text-white shadow-lg shadow-red-500/25 hover:bg-red-700 active:scale-[0.98] dark:shadow-red-900/30"
               }`}
             >
               {creatingBooking ? (
@@ -778,12 +769,12 @@ const BookingSummary = ({
               )}
             </button>
 
-            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold text-slate-400">
-              <CreditCard className="h-4 w-4 text-green-600" />
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold text-slate-400 dark:text-slate-500">
+              <CreditCard className="h-4 w-4 text-green-600 dark:text-green-400" />
               Secure payment powered by TedBus
             </div>
 
-            <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+            <p className="mt-4 text-center text-xs leading-5 text-slate-500 dark:text-slate-400">
               By proceeding, you agree to TedBus terms, cancellation and refund
               policies.
             </p>

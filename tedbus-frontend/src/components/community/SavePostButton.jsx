@@ -38,8 +38,8 @@ const SavePostButton = ({ postId, initialSaved = false }) => {
       disabled={loading}
       className={`p-2.5 rounded-2xl font-bold transition-all active:scale-90 ${
         isSaved
-          ? "bg-red-50 text-red-600"
-          : "bg-white text-slate-500 hover:text-red-600 shadow-[2px_2px_6px_rgba(0,0,0,0.05)]"
+          ? "bg-red-50 dark:bg-red-900/30 text-red-600"
+          : "bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 shadow-[2px_2px_6px_rgba(0,0,0,0.05)]"
       }`}
       title={isSaved ? "Remove from saved" : "Save post"}
     >

@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Send } from "lucide-react";
 import useComments from "../../hooks/useComments";
 import CommentCard from "./CommentCard";
@@ -39,13 +39,13 @@ const CommentSection = ({ postId }) => {
   };
 
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-[2rem] border border-slate-100 shadow-sm">
-      <h3 className="text-xl font-black text-slate-800 mb-6">
+    <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-[2rem] border  border-slate-100 dark:border-slate-800 shadow-sm">
+      <h3 className="text-xl font-black text-slate-800 dark:text-slate-200 mb-6">
         Comments ({comments.length})
       </h3>
 
       {/* Add New Comment Input */}
-      <div className="flex items-center gap-3 mb-8 bg-slate-50 p-2 rounded-2xl border-2 border-slate-100 focus-within:border-red-300 transition-colors">
+      <div className="flex items-center gap-3 mb-8 bg-slate-50 dark:bg-slate-950 p-2 rounded-2xl border-2  border-slate-100 dark:border-slate-800 focus-within:border-red-300 transition-colors">
         <img
           src={user?.profileImage || "https://via.placeholder.com/150"}
           alt="You"
@@ -71,11 +71,17 @@ const CommentSection = ({ postId }) => {
       {loading && comments.length === 0 ? (
         <p className="text-center text-slate-400 py-4">Loading comments...</p>
       ) : comments.length === 0 ? (
-        <p className="text-center text-slate-400 py-4">No comments yet. Be the first!</p>
+        <p className="text-center text-slate-400 py-4">
+          No comments yet. Be the first!
+        </p>
       ) : (
         <div className="flex flex-col">
           {comments.map((comment) => (
-            <CommentCard key={comment._id} comment={comment} onReply={handleReply} />
+            <CommentCard
+              key={comment._id}
+              comment={comment}
+              onReply={handleReply}
+            />
           ))}
         </div>
       )}

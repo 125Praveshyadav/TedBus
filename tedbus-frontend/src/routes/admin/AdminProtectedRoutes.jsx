@@ -8,10 +8,10 @@ const AdminProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <div className="rounded-3xl bg-white dark:bg-slate-900 p-8 text-center shadow-sm">
           <Loader2 className="mx-auto h-10 w-10 animate-spin text-red-600" />
-          <p className="mt-4 text-sm font-bold text-slate-500">
+          <p className="mt-4 text-sm font-bold text-slate-500 dark:text-slate-400">
             Checking admin access...
           </p>
         </div>

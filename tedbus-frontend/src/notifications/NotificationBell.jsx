@@ -11,7 +11,7 @@ const NotificationBell = () => {
     <div className="relative">
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-slate-100 bg-white text-slate-600 transition-all hover:border-red-200 hover:text-red-600 active:scale-95"
+        className="relative flex h-11 w-11 items-center justify-center rounded-2xl border-2  border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 transition-all hover:border-red-200 dark:hover:border-red-800 hover:text-red-600 dark:hover:text-red-400 active:scale-95"
       >
         <Bell size={20} className={unreadCount > 0 ? "animate-pulse" : ""} />
 

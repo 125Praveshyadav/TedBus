@@ -12,12 +12,11 @@ const Trending = () => {
   }, [fetchPosts]);
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        
         <Link
           to="/community"
-          className="inline-flex items-center gap-2 text-slate-500 hover:text-red-600 font-bold mb-6 transition-colors"
+          className="inline-flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 font-bold mb-6 transition-colors"
         >
           <ArrowLeft size={20} />
           Back to Community
@@ -26,7 +25,7 @@ const Trending = () => {
         {/* Header */}
         <div className="bg-gradient-to-br from-orange-500 via-red-500 to-red-600 p-6 sm:p-8 rounded-[2.5rem] shadow-lg mb-8 text-white">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-white dark:bg-slate-900/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
               <Flame size={36} className="text-white" fill="currentColor" />
             </div>
             <div>
@@ -44,10 +43,14 @@ const Trending = () => {
             <Loader2 className="animate-spin text-red-600" size={40} />
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-[2rem] border-2 border-dashed border-slate-200">
+          <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-[2rem] border-2 border-dashed border-slate-200 dark:border-slate-700">
             <Flame size={48} className="mx-auto text-slate-300 mb-3" />
-            <h3 className="text-lg font-bold text-slate-700">No trending posts yet</h3>
-            <p className="text-slate-500 text-sm">Come back later to see popular content!</p>
+            <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">
+              No trending posts yet
+            </h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">
+              Come back later to see popular content!
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
@@ -56,11 +59,15 @@ const Trending = () => {
                 {/* Ranking Badge */}
                 {idx < 3 && (
                   <div className="absolute -left-2 -top-2 z-10">
-                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-white shadow-lg ${
-                      idx === 0 ? "bg-yellow-500" :
-                      idx === 1 ? "bg-slate-400" :
-                      "bg-orange-500"
-                    }`}>
+                    <div
+                      className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-white shadow-lg ${
+                        idx === 0
+                          ? "bg-yellow-500"
+                          : idx === 1
+                            ? "bg-slate-400"
+                            : "bg-orange-500"
+                      }`}
+                    >
                       #{idx + 1}
                     </div>
                   </div>

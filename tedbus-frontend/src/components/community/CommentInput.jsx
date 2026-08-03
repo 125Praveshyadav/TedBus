@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-const CommentInput = ({ onSubmit, placeholder = "Write a comment...", autoFocus = false }) => {
+const CommentInput = ({
+  onSubmit,
+  placeholder = "Write a comment...",
+  autoFocus = false,
+}) => {
   const { user } = useAuth();
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,9 +25,13 @@ const CommentInput = ({ onSubmit, placeholder = "Write a comment...", autoFocus 
   return (
     <form onSubmit={handleSubmit} className="flex items-start gap-3">
       {/* Avatar */}
-      <div className="w-10 h-10 rounded-2xl overflow-hidden bg-red-50 border-2 border-white shadow-sm shrink-0 mt-1">
+      <div className="w-10 h-10 rounded-2xl overflow-hidden bg-red-50 dark:bg-red-900/30 border-2 border-white shadow-sm shrink-0 mt-1">
         {user?.profileImage ? (
-          <img src={user.profileImage} alt="me" className="w-full h-full object-cover" />
+          <img
+            src={user.profileImage}
+            alt="me"
+            className="w-full h-full object-cover"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-red-600 font-black">
             {userInitial}
@@ -49,7 +57,7 @@ const CommentInput = ({ onSubmit, placeholder = "Write a comment...", autoFocus 
               handleSubmit(e);
             }
           }}
-          className="flex-1 px-4 py-2.5 bg-slate-50 border-2 border-slate-100 focus:border-red-400 focus:bg-white outline-none rounded-2xl text-sm font-medium text-slate-800 resize-none transition-colors min-h-[44px] max-h-40 overflow-y-auto"
+          className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border-2  border-slate-100 dark:border-slate-800 focus:border-red-400 focus:bg-white dark:bg-slate-900 outline-none rounded-2xl text-sm font-medium text-slate-800 dark:text-slate-200 resize-none transition-colors min-h-[44px] max-h-40 overflow-y-auto"
         />
 
         <button
@@ -57,10 +65,11 @@ const CommentInput = ({ onSubmit, placeholder = "Write a comment...", autoFocus 
           disabled={loading || !text.trim()}
           className="w-10 h-10 flex items-center justify-center bg-red-600 text-white rounded-2xl shadow-[0_4px_12px_rgba(220,38,38,0.3)] hover:bg-red-700 active:scale-95 transition-all disabled:opacity-50 shrink-0"
         >
-          {loading
-            ? <Loader2 size={16} className="animate-spin" />
-            : <Send size={16} />
-          }
+          {loading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Send size={16} />
+          )}
         </button>
       </div>
     </form>

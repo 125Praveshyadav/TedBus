@@ -1,4 +1,4 @@
-import { Routes, Route , useLocation   } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/user/Home";
@@ -7,7 +7,7 @@ import Navbar from "./components/common/Navbar";
 import SearchBus from "./pages/user/SearchBus";
 import BusDetails from "./pages/user/BusDetails";
 import SeatSelection from "./pages/user/SeatSelection";
-// import PassengerInfo from "./pages/user/PassengerInfo";
+//  import PassengerInfo from "./pages/user/PassengerInfo";
 import Payment from "./pages/user/Payment";
 import BookingSuccess from "./pages/user/BookingSuccess";
 import MyBookings from "./pages/user/MyBookings";
@@ -23,6 +23,7 @@ import Contact from "./components/home/Contact";
 import Booking from "./pages/user/Booking";
 import Ticket from "./pages/user/Ticket";
 // import NotFound from "./components/common/NotFound";
+import DiscussionDetails from "./pages/forum/DiscussionDetails";
 import AdminRoutes from "./routes/admin/AdminRoutes";
 import AdminProtectedRoute from "./routes/admin/AdminProtectedRoutes";
 import CommunityRoutes from "./routes/community/CommunityRoutes";
@@ -30,89 +31,96 @@ import { SocketProvider } from "./components/context/SocketContext";
 import Notifications from "./pages/user/Notifications";
 import NotificationSettings from "./pages/user/NotificationSettings";
 import { ThemeProvider } from "./components/context/ThemeContext";
+// App.jsx
+import RoutePlanner from "./pages/user/RoutePlanner";
 
 function App() {
-   const location = useLocation();
+  const location = useLocation();
 
   const isAdminRoute = location.pathname.startsWith("/admin");
-  <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300"></div>
-
  
+
   return (
-    <ThemeProvider> 
-     <SocketProvider>   
-        {!isAdminRoute && <Navbar />} 
+    <ThemeProvider>
+      <SocketProvider>
+         <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+        {!isAdminRoute && <Navbar />}
         {/* <Navbar/> */}
 
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/search-bus" element={<SearchBus />}></Route>
 
-      <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/search-bus" element={<SearchBus />}></Route>
+          <Route path="/bus/:id" element={<BusDetails />}></Route>
+          <Route path="/seat-selection/:id" element={<SeatSelection />} />
+          <Route path="/passenger-info" element={<Booking />}></Route>
 
-        <Route path="/bus/:id" element={<BusDetails />}></Route>
-        <Route path="/seat-selection/:id" element={<SeatSelection />} />
-        <Route path="/passenger-info" element={<Booking />}></Route>
 
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/booking-success" element={<BookingSuccess />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/booking-success" element={<BookingSuccess />} />
 
-        <Route path="/my-bookings" element={<MyBookings />} />
-        <Route path="/register" element={<Register />}></Route>
-        <Route path="/login" element={<Login />}></Route>
+          <Route path="/my-bookings" element={<MyBookings />} />
+          <Route path="/register" element={<Register />}></Route>
+          <Route path="/login" element={<Login />}></Route>
 
-        <Route path="/forgot-password" element={<ForgotPassword />}>
-          {" "}
-        </Route>
-        <Route path="/verify-otp/:email" element={<OtpVerification />}>
-          {" "}
-        </Route>
+          <Route path="/forgot-password" element={<ForgotPassword />}>
+            {" "}
+          </Route>
+          <Route path="/verify-otp/:email" element={<OtpVerification />}>
+            {" "}
+          </Route>
 
-        <Route path="/verify-reset-otp/:email" element={<ResetPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />}>
-          {" "}
-        </Route>
+          <Route path="/verify-reset-otp/:email" element={<ResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />}>
+            {" "}
+          </Route>
 
-        <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
 
-        <Route path="/offers" element={<OffersNav />}></Route>
+          <Route path="/offers" element={<OffersNav />}></Route>
 
-        <Route path="/contact" element={<Contact />}></Route>
+          <Route path="/contact" element={<Contact />}></Route>
 
-        <Route path="/booking" element={<Booking />} />
+          {/* <Route path="/booking" element={<Booking />} /> */}
 
-        <Route path="/ticket" element={<Ticket />}></Route>
+          <Route path="/ticket" element={<Ticket />}></Route>
 
-         <Route path="/community/*" element={<CommunityRoutes />} />
+          <Route path="/community/*" element={<CommunityRoutes />} />
 
-        <Route
-          path="/admin/*"
-          element={
-            <AdminProtectedRoute>
-              <AdminRoutes />
-            </AdminProtectedRoute>
-          }
+          <Route
+            path="/admin/*"
+            element={
+              <AdminProtectedRoute>
+                <AdminRoutes />
+              </AdminProtectedRoute>
+            }
+          />
+          <Route
+  path="/community/forums/discussions/:id"
+  element={<DiscussionDetails />}
+/>
+          <Route path="/notifications" element={<Notifications />} />
+          <Route
+            path="/notification-settings"
+            element={<NotificationSettings />}
+          />
+          <Route path="/route-planner" element={<RoutePlanner />} />
+
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
+
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          theme="colored"
         />
-       <Route path="/notifications" element={<Notifications />} />
-<Route path="/notification-settings" element={<NotificationSettings />} />
-
-       
-
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
- 
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-        theme="colored"
-      />
-       </SocketProvider> 
-         </ThemeProvider>
-  
+        </div>
+      </SocketProvider>
+    </ThemeProvider>
   );
 }
 

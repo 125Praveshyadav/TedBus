@@ -154,22 +154,22 @@ const BusFilters = ({
     (filters.priceRange?.[1] < maxPrice ? 1 : 0);
 
   return (
-    <aside className="sticky top-24 h-fit rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm">
+    <aside className="sticky top-24 h-fit rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4">
+      <div className="mb-6 flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
         <div>
-          <h3 className="flex items-center gap-2 text-lg font-black text-slate-900">
-            <SlidersHorizontal className="h-5 w-5 text-red-600" />
+          <h3 className="flex items-center gap-2 text-lg font-black text-slate-900 dark:text-white">
+            <SlidersHorizontal className="h-5 w-5 text-red-600 dark:text-red-400" />
             Filters
           </h3>
 
-          <p className="mt-1 text-xs font-medium text-slate-500">
+          <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
             Refine your bus search
           </p>
         </div>
 
         {activeFilterCount > 0 && (
-          <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-black text-red-600">
+          <span className="rounded-full bg-red-50 px-3 py-1 text-xs font-black text-red-600 dark:bg-red-950/40 dark:text-red-400">
             {activeFilterCount}
           </span>
         )}
@@ -178,8 +178,8 @@ const BusFilters = ({
       <div className="space-y-7">
         {/* Bus Type */}
         <div>
-          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800">
-            <Bus className="h-4 w-4 text-red-600" />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-200">
+            <Bus className="h-4 w-4 text-red-600 dark:text-red-400" />
             Bus Type
           </h4>
 
@@ -187,9 +187,9 @@ const BusFilters = ({
             {availableBusTypes.map((type) => (
               <label
                 key={type}
-                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50"
+                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50 dark:hover:bg-slate-800"
               >
-                <span className="text-sm font-semibold text-slate-600">
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                   {type}
                 </span>
 
@@ -197,7 +197,7 @@ const BusFilters = ({
                   type="checkbox"
                   checked={filters.busType?.includes(type)}
                   onChange={() => handleCheckboxChange("busType", type)}
-                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600"
+                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600 dark:border-slate-600"
                 />
               </label>
             ))}
@@ -206,8 +206,8 @@ const BusFilters = ({
 
         {/* Departure Time */}
         <div>
-          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800">
-            <Clock3 className="h-4 w-4 text-red-600" />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-200">
+            <Clock3 className="h-4 w-4 text-red-600 dark:text-red-400" />
             Departure Time
           </h4>
 
@@ -215,9 +215,9 @@ const BusFilters = ({
             {TIME_SLOTS.map((slot) => (
               <label
                 key={slot.value}
-                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50"
+                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50 dark:hover:bg-slate-800"
               >
-                <span className="text-sm font-semibold text-slate-600">
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                   {slot.label}
                 </span>
 
@@ -227,7 +227,7 @@ const BusFilters = ({
                   onChange={() =>
                     handleCheckboxChange("departureTime", slot.value)
                   }
-                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600"
+                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600 dark:border-slate-600"
                 />
               </label>
             ))}
@@ -236,8 +236,8 @@ const BusFilters = ({
 
         {/* Arrival Time */}
         <div>
-          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800">
-            <Clock3 className="h-4 w-4 text-red-600" />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-200">
+            <Clock3 className="h-4 w-4 text-red-600 dark:text-red-400" />
             Arrival Time
           </h4>
 
@@ -245,9 +245,9 @@ const BusFilters = ({
             {TIME_SLOTS.map((slot) => (
               <label
                 key={slot.value}
-                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50"
+                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50 dark:hover:bg-slate-800"
               >
-                <span className="text-sm font-semibold text-slate-600">
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                   {slot.label}
                 </span>
 
@@ -257,7 +257,7 @@ const BusFilters = ({
                   onChange={() =>
                     handleCheckboxChange("arrivalTime", slot.value)
                   }
-                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600"
+                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600 dark:border-slate-600"
                 />
               </label>
             ))}
@@ -266,8 +266,8 @@ const BusFilters = ({
 
         {/* Price Range */}
         <div>
-          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800">
-            <IndianRupee className="h-4 w-4 text-red-600" />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-200">
+            <IndianRupee className="h-4 w-4 text-red-600 dark:text-red-400" />
             Price Range
           </h4>
 
@@ -281,9 +281,9 @@ const BusFilters = ({
             className="w-full cursor-pointer accent-red-600"
           />
 
-          <div className="mt-2 flex items-center justify-between text-xs font-bold text-slate-500">
+          <div className="mt-2 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
             <span>₹0</span>
-            <span className="rounded-full bg-red-50 px-3 py-1 text-red-600">
+            <span className="rounded-full bg-red-50 px-3 py-1 text-red-600 dark:bg-red-950/40 dark:text-red-400">
               ₹{filters.priceRange?.[1] || maxPrice}
             </span>
           </div>
@@ -291,8 +291,8 @@ const BusFilters = ({
 
         {/* Amenities */}
         <div>
-          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800">
-            <Sparkles className="h-4 w-4 text-red-600" />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-200">
+            <Sparkles className="h-4 w-4 text-red-600 dark:text-red-400" />
             Amenities
           </h4>
 
@@ -300,19 +300,17 @@ const BusFilters = ({
             {AMENITIES.map((item) => (
               <label
                 key={item.value}
-                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50"
+                className="flex cursor-pointer items-center justify-between rounded-2xl px-3 py-2 transition hover:bg-slate-50 dark:hover:bg-slate-800"
               >
-                <span className="text-sm font-semibold text-slate-600">
+                <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                   {item.label}
                 </span>
 
                 <input
                   type="checkbox"
                   checked={filters.amenities?.includes(item.value)}
-                  onChange={() =>
-                    handleCheckboxChange("amenities", item.value)
-                  }
-                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600"
+                  onChange={() => handleCheckboxChange("amenities", item.value)}
+                  className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-red-600 dark:border-slate-600"
                 />
               </label>
             ))}
@@ -321,8 +319,8 @@ const BusFilters = ({
 
         {/* Rating */}
         <div>
-          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800">
-            <Star className="h-4 w-4 text-red-600" />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-black text-slate-800 dark:text-slate-200">
+            <Star className="h-4 w-4 text-red-600 dark:text-red-400" />
             Rating
           </h4>
 
@@ -334,8 +332,8 @@ const BusFilters = ({
                 onClick={() => handleRatingChange(rating)}
                 className={`rounded-2xl border px-3 py-2 text-sm font-black transition ${
                   filters.rating === rating
-                    ? "border-green-500 bg-green-50 text-green-700"
-                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                    ? "border-green-500 bg-green-50 text-green-700 dark:border-green-600 dark:bg-green-950/40 dark:text-green-400"
+                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800"
                 }`}
               >
                 ⭐ {rating}+
@@ -349,7 +347,7 @@ const BusFilters = ({
       <button
         type="button"
         onClick={handleReset}
-        className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-red-600 active:scale-[0.98]"
+        className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-red-600 active:scale-[0.98] dark:bg-slate-800 dark:hover:bg-red-600"
       >
         <RotateCcw className="h-4 w-4" />
         Reset Filters
