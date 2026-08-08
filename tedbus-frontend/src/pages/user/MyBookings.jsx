@@ -21,12 +21,13 @@ import {
   Timer,
   TrendingUp,
   XCircle,
-  
+  Edit3,
 } from "lucide-react";
 import { toast } from "react-toastify";
 
 import { bookingService } from "../../services/bookingService";
 import ReviewModal from "../../components/review/ReviewModal";
+import reviewService from "../../services/reviewService";
 
 const BOOKING_THEMES = [
   {
@@ -202,9 +203,7 @@ const BOOKING_THEMES = [
 ];
 
 const getTheme = (index) => {
-  return BOOKING_THEMES[
-    (Number(index) || 0) % BOOKING_THEMES.length
-  ];
+  return BOOKING_THEMES[(Number(index) || 0) % BOOKING_THEMES.length];
 };
 
 const formatCurrency = (amount) => {
@@ -229,10 +228,7 @@ const formatDate = (date) => {
 };
 
 const getBookingSeats = (booking) => {
-  if (
-    Array.isArray(booking?.seatNumbers) &&
-    booking.seatNumbers.length > 0
-  ) {
+  if (Array.isArray(booking?.seatNumbers) && booking.seatNumbers.length > 0) {
     return booking.seatNumbers;
   }
 
@@ -246,10 +242,7 @@ const getBookingSeats = (booking) => {
 };
 
 const getPrimaryPassenger = (booking) => {
-  if (
-    Array.isArray(booking?.passengerDetails) &&
-    booking.passengerDetails[0]
-  ) {
+  if (Array.isArray(booking?.passengerDetails) && booking.passengerDetails[0]) {
     return booking.passengerDetails[0];
   }
 
@@ -265,37 +258,17 @@ const normalizeBooking = (booking) => {
     ...booking,
     id: booking?._id || booking?.id,
     pnr: booking?.pnr || "N/A",
-    busName:
-      bus?.name ||
-      bus?.busName ||
-      bus?.operatorName ||
-      "TedBus Partner",
-    busType:
-      bus?.type ||
-      bus?.busType ||
-      bus?.category ||
-      "Standard Bus",
+    busName: bus?.name || bus?.busName || bus?.operatorName || "TedBus Partner",
+    busType: bus?.type || bus?.busType || bus?.category || "Standard Bus",
     source: bus?.source || "Source",
     destination: bus?.destination || "Destination",
-    departure:
-      bus?.departure ||
-      bus?.departureTime ||
-      bus?.startTime ||
-      "—",
-    arrival:
-      bus?.arrival ||
-      bus?.arrivalTime ||
-      bus?.endTime ||
-      "—",
+    departure: bus?.departure || bus?.departureTime || bus?.startTime || "—",
+    arrival: bus?.arrival || bus?.arrivalTime || bus?.endTime || "—",
     duration: bus?.duration || "—",
-    journeyDate:
-      booking?.journeyDate || bus?.journeyDate || "",
+    journeyDate: booking?.journeyDate || bus?.journeyDate || "",
     seats,
     passengerName: passenger?.name || "Passenger",
-    amount:
-      booking?.totalAmount ||
-      booking?.fareBreakup?.totalAmount ||
-      0,
+    amount: booking?.totalAmount || booking?.fareBreakup?.totalAmount || 0,
     bookingStatus: booking?.bookingStatus || "Pending",
     paymentStatus: booking?.paymentStatus || "Pending",
     boardingPoint: booking?.boardingPoint || "",
@@ -362,28 +335,27 @@ const MyBookings = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [reviewBooking, setReviewBooking] = useState(null);
+  const [reviewEligibilityMap, setReviewEligibilityMap] = useState({});
 
   const fetchBookings = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const response =
-        await bookingService.getMyBookings();
+      const response = await bookingService.getMyBookings();
 
-      const apiBookings =
-        response?.bookings ||
-        response?.data?.bookings ||
-        [];
+      const apiBookings = response?.bookings || response?.data?.bookings || [];
 
       const normalized = Array.isArray(apiBookings)
         ? apiBookings.map(normalizeBooking)
         : [];
 
       setBookings(normalized);
+      await fetchReviewEligibilities(normalized);
     } catch (err) {
       setError(err?.message || "Unable to load bookings");
       setBookings([]);
+       setReviewEligibilityMap({});
     } finally {
       setLoading(false);
     }
@@ -393,14 +365,80 @@ const MyBookings = () => {
     fetchBookings();
   }, []);
 
+  const fetchReviewEligibilities = async (bookingList = []) => {
+    const eligibleBookings = bookingList.filter((booking) => {
+      const isPastJourney = booking.journeyDate
+        ? new Date(booking.journeyDate) < new Date()
+        : false;
+
+      const isConfirmed = booking.bookingStatus === "Confirmed";
+
+      return isPastJourney && isConfirmed;
+    });
+
+    if (eligibleBookings.length === 0) {
+      setReviewEligibilityMap({});
+      return;
+    }
+
+    // First set loading state for relevant bookings
+    setReviewEligibilityMap((prev) => {
+      const next = { ...prev };
+
+      eligibleBookings.forEach((booking) => {
+        next[booking.id] = {
+          loading: true,
+        };
+      });
+
+      return next;
+    });
+
+    const results = await Promise.all(
+      eligibleBookings.map(async (booking) => {
+        try {
+          const data = await reviewService.checkCanReview(booking.id);
+
+          return {
+            bookingId: booking.id,
+            data: {
+              ...data,
+              loading: false,
+            },
+          };
+        } catch (err) {
+          return {
+            bookingId: booking.id,
+            data: {
+              loading: false,
+              canReview: false,
+              alreadyReviewed: false,
+              canEdit: false,
+              message:
+                err?.data?.message ||
+                err?.response?.data?.message ||
+                err?.message ||
+                "Unable to check review status",
+            },
+          };
+        }
+      }),
+    );
+
+    const mapped = {};
+    results.forEach((item) => {
+      mapped[item.bookingId] = item.data;
+    });
+
+    setReviewEligibilityMap(mapped);
+  };
+
   const filteredBookings = useMemo(() => {
     let result = [...bookings];
 
     if (activeFilter !== "all") {
       result = result.filter(
-        (b) =>
-          b.bookingStatus?.toLowerCase() ===
-          activeFilter.toLowerCase(),
+        (b) => b.bookingStatus?.toLowerCase() === activeFilter.toLowerCase(),
       );
     }
 
@@ -422,15 +460,9 @@ const MyBookings = () => {
   const bookingCounts = useMemo(
     () => ({
       all: bookings.length,
-      confirmed: bookings.filter(
-        (b) => b.bookingStatus === "Confirmed",
-      ).length,
-      pending: bookings.filter(
-        (b) => b.bookingStatus === "Pending",
-      ).length,
-      cancelled: bookings.filter(
-        (b) => b.bookingStatus === "Cancelled",
-      ).length,
+      confirmed: bookings.filter((b) => b.bookingStatus === "Confirmed").length,
+      pending: bookings.filter((b) => b.bookingStatus === "Pending").length,
+      cancelled: bookings.filter((b) => b.bookingStatus === "Cancelled").length,
     }),
     [bookings],
   );
@@ -445,9 +477,7 @@ const MyBookings = () => {
     try {
       setActionLoading(`download-${booking.id}`);
 
-      const blob = await bookingService.downloadTicket(
-        booking.id,
-      );
+      const blob = await bookingService.downloadTicket(booking.id);
 
       const fileBlob =
         blob instanceof Blob
@@ -465,9 +495,7 @@ const MyBookings = () => {
 
       toast.success("Ticket downloaded successfully");
     } catch (err) {
-      toast.error(
-        err?.message || "Unable to download ticket",
-      );
+      toast.error(err?.message || "Unable to download ticket");
     } finally {
       setActionLoading("");
     }
@@ -476,31 +504,24 @@ const MyBookings = () => {
   const handleCancel = async (booking) => {
     if (booking.bookingStatus === "Cancelled") return;
 
-    const confirmCancel = window.confirm(
-      `Cancel booking ${booking.pnr}?`,
-    );
+    const confirmCancel = window.confirm(`Cancel booking ${booking.pnr}?`);
 
     if (!confirmCancel) return;
 
     const cancellationReason =
-      window.prompt(
-        "Cancellation reason:",
-        "User Cancelled",
-      ) || "User Cancelled";
+      window.prompt("Cancellation reason:", "User Cancelled") ||
+      "User Cancelled";
 
     try {
       setActionLoading(`cancel-${booking.id}`);
 
-      const response =
-        await bookingService.cancelBooking(
-          booking.id,
-          cancellationReason,
-        );
+      const response = await bookingService.cancelBooking(
+        booking.id,
+        cancellationReason,
+      );
 
       const updatedBooking =
-        response?.booking ||
-        response?.data?.booking ||
-        null;
+        response?.booking || response?.data?.booking || null;
 
       setBookings((prev) =>
         prev.map((item) =>
@@ -515,14 +536,9 @@ const MyBookings = () => {
         ),
       );
 
-      toast.success(
-        response?.message ||
-          "Booking cancelled successfully",
-      );
+      toast.success(response?.message || "Booking cancelled successfully");
     } catch (err) {
-      toast.error(
-        err?.message || "Unable to cancel booking",
-      );
+      toast.error(err?.message || "Unable to cancel booking");
     } finally {
       setActionLoading("");
     }
@@ -588,8 +604,8 @@ const MyBookings = () => {
               </h1>
 
               <p className="mt-2 max-w-xl text-xs font-medium leading-5 text-red-50/90 sm:text-sm sm:leading-6">
-                View upcoming journeys, download tickets
-                and manage your travel plans.
+                View upcoming journeys, download tickets and manage your travel
+                plans.
               </p>
             </div>
 
@@ -664,16 +680,13 @@ const MyBookings = () => {
                 <div className="flex flex-wrap gap-2">
                   {filterTabs.map((tab) => {
                     const TabIcon = tab.icon;
-                    const count =
-                      bookingCounts[tab.key] || 0;
+                    const count = bookingCounts[tab.key] || 0;
 
                     return (
                       <button
                         key={tab.key}
                         type="button"
-                        onClick={() =>
-                          setActiveFilter(tab.key)
-                        }
+                        onClick={() => setActiveFilter(tab.key)}
                         className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs font-black transition sm:text-sm ${
                           activeFilter === tab.key
                             ? "bg-gradient-to-r from-red-600 to-orange-500 text-white shadow-lg shadow-red-500/20"
@@ -705,9 +718,7 @@ const MyBookings = () => {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(event) =>
-                      setSearchQuery(event.target.value)
-                    }
+                    onChange={(event) => setSearchQuery(event.target.value)}
                     placeholder="Search PNR, bus, city..."
                     className="h-14 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-14 pr-4 text-sm font-bold text-slate-900 outline-none transition focus:border-red-500 focus:bg-white focus:ring-4 focus:ring-red-500/10 dark:border-slate-700 dark:bg-slate-800/70 dark:text-white dark:focus:bg-slate-900"
                   />
@@ -755,23 +766,18 @@ const MyBookings = () => {
                 const theme = getTheme(index);
 
                 const isPastJourney = booking.journeyDate
-                  ? new Date(booking.journeyDate) <
-                    new Date()
+                  ? new Date(booking.journeyDate) < new Date()
                   : false;
 
-                const isConfirmed =
-                  booking.bookingStatus === "Confirmed";
+                const isConfirmed = booking.bookingStatus === "Confirmed";
 
-                const isCancelled =
-                  booking.bookingStatus === "Cancelled";
+                const isCancelled = booking.bookingStatus === "Cancelled";
 
                 const statusCfg =
-                  statusConfig[booking.bookingStatus] ||
-                  statusConfig.Pending;
+                  statusConfig[booking.bookingStatus] || statusConfig.Pending;
 
                 const paymentCfg =
-                  paymentConfig[booking.paymentStatus] ||
-                  paymentConfig.Pending;
+                  paymentConfig[booking.paymentStatus] || paymentConfig.Pending;
 
                 const StatusIcon = statusCfg.icon;
 
@@ -863,9 +869,7 @@ const MyBookings = () => {
                                 <CalendarDays
                                   className={`h-3.5 w-3.5 ${theme.accentText}`}
                                 />
-                                {formatDate(
-                                  booking.journeyDate,
-                                )}
+                                {formatDate(booking.journeyDate)}
                               </p>
                             </div>
 
@@ -877,18 +881,15 @@ const MyBookings = () => {
                               </p>
 
                               <div className="mt-1 flex flex-wrap gap-1">
-                                {booking.seats.length >
-                                0 ? (
-                                  booking.seats.map(
-                                    (seat) => (
-                                      <span
-                                        key={seat}
-                                        className={`rounded-lg border px-2 py-0.5 text-[10px] font-black ${theme.softBg} ${theme.softBorder} ${theme.accentText}`}
-                                      >
-                                        {seat}
-                                      </span>
-                                    ),
-                                  )
+                                {booking.seats.length > 0 ? (
+                                  booking.seats.map((seat) => (
+                                    <span
+                                      key={seat}
+                                      className={`rounded-lg border px-2 py-0.5 text-[10px] font-black ${theme.softBg} ${theme.softBorder} ${theme.accentText}`}
+                                    >
+                                      {seat}
+                                    </span>
+                                  ))
                                 ) : (
                                   <span className="text-xs font-bold text-slate-400">
                                     N/A
@@ -971,19 +972,13 @@ const MyBookings = () => {
                               className={`mt-1 flex items-center gap-1 text-2xl font-black sm:text-3xl ${theme.accentText}`}
                             >
                               <IndianRupee className="h-6 w-6" />
-                              {formatCurrency(
-                                booking.amount,
-                              )}
+                              {formatCurrency(booking.amount)}
                             </p>
 
                             <div className="mt-4 space-y-2.5">
                               <button
                                 type="button"
-                                onClick={() =>
-                                  handleViewTicket(
-                                    booking,
-                                  )
-                                }
+                                onClick={() => handleViewTicket(booking)}
                                 className={`group/btn flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98] ${theme.ticketBtnBg}`}
                               >
                                 <Ticket className="h-4 w-4" />
@@ -993,17 +988,13 @@ const MyBookings = () => {
 
                               <button
                                 type="button"
-                                onClick={() =>
-                                  handleDownload(booking)
-                                }
+                                onClick={() => handleDownload(booking)}
                                 disabled={
-                                  actionLoading ===
-                                  `download-${booking.id}`
+                                  actionLoading === `download-${booking.id}`
                                 }
                                 className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black text-white transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 active:translate-y-0 active:scale-[0.98] ${theme.downloadBtnBg}`}
                               >
-                                {actionLoading ===
-                                `download-${booking.id}` ? (
+                                {actionLoading === `download-${booking.id}` ? (
                                   <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
                                   <Download className="h-4 w-4" />
@@ -1011,36 +1002,88 @@ const MyBookings = () => {
                                 Download
                               </button>
 
-                              {isPastJourney &&
-                                isConfirmed && (
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      setReviewBooking(
-                                        booking,
-                                      )
-                                    }
-                                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-700 transition hover:bg-amber-100 active:scale-[0.98] dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-400 dark:hover:bg-amber-950/50"
-                                  >
-                                    <Star className="h-4 w-4 fill-current" />
-                                    Rate Journey
-                                  </button>
-                                )}
+                      {isPastJourney && isConfirmed && (() => {
+  const reviewStatus = reviewEligibilityMap[booking.id];
+
+  if (!reviewStatus || reviewStatus.loading) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-black text-slate-400 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-500"
+      >
+        <Loader2 className="h-4 w-4 animate-spin" />
+        Checking Review...
+      </button>
+    );
+  }
+
+  if (reviewStatus.canReview) {
+    return (
+      <button
+        type="button"
+        onClick={() =>
+          setReviewBooking({
+            ...booking,
+            reviewStatus,
+          })
+        }
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-700 transition hover:bg-amber-100 active:scale-[0.98] dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-400 dark:hover:bg-amber-950/50"
+      >
+        <Star className="h-4 w-4 fill-current" />
+        Rate Journey
+      </button>
+    );
+  }
+
+  if (reviewStatus.alreadyReviewed && reviewStatus.canEdit) {
+    return (
+      <button
+        type="button"
+        onClick={() =>
+          setReviewBooking({
+            ...booking,
+            reviewStatus,
+          })
+        }
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-black text-violet-700 transition hover:bg-violet-100 active:scale-[0.98] dark:border-violet-900/50 dark:bg-violet-950/30 dark:text-violet-400 dark:hover:bg-violet-950/50"
+      >
+        <Edit3 className="h-4 w-4" />
+        Edit Review
+      </button>
+    );
+  }
+
+  if (reviewStatus.alreadyReviewed && !reviewStatus.canEdit) {
+    return (
+      <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-black text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-400">
+        <CheckCircle2 className="h-4 w-4" />
+        Reviewed
+      </div>
+    );
+  }
+
+  return null;
+})()}
+
+{isPastJourney && isConfirmed && reviewEligibilityMap[booking.id]?.alreadyReviewed && (
+  <p className="mt-1 text-center text-[10px] font-bold text-slate-400 dark:text-slate-500">
+    {reviewEligibilityMap[booking.id]?.canEdit
+      ? "You can edit your review within 24 hours"
+      : "Review already submitted"}
+  </p>
+)}
 
                               {!isCancelled && (
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    handleCancel(booking)
-                                  }
+                                  onClick={() => handleCancel(booking)}
                                   disabled={
-                                    actionLoading ===
-                                    `cancel-${booking.id}`
+                                    actionLoading === `cancel-${booking.id}`
                                   }
                                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-black text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-70 active:scale-[0.98] dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-950/50"
                                 >
-                                  {actionLoading ===
-                                  `cancel-${booking.id}` ? (
+                                  {actionLoading === `cancel-${booking.id}` ? (
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                   ) : (
                                     <XCircle className="h-4 w-4" />
@@ -1064,17 +1107,15 @@ const MyBookings = () => {
                     </div>
 
                     {/* Confirmed footer */}
-                    {isConfirmed &&
-                      booking.paymentStatus === "Paid" && (
-                        <div className="flex items-center gap-2 px-5 py-3 sm:px-6">
-                          <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                    {isConfirmed && booking.paymentStatus === "Paid" && (
+                      <div className="flex items-center gap-2 px-5 py-3 sm:px-6">
+                        <ShieldCheck className="h-4 w-4 text-emerald-500" />
 
-                          <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                            Ticket confirmed — please
-                            carry a valid ID proof.
-                          </p>
-                        </div>
-                      )}
+                        <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                          Ticket confirmed — please carry a valid ID proof.
+                        </p>
+                      </div>
+                    )}
 
                     {/* Trust footer */}
                     <div className="flex items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 dark:border-slate-800 sm:px-6">
@@ -1089,11 +1130,7 @@ const MyBookings = () => {
                         />
 
                         <span className={theme.accentText}>
-                          Booking #
-                          {String(index + 1).padStart(
-                            2,
-                            "0",
-                          )}
+                          Booking #{String(index + 1).padStart(2, "0")}
                         </span>
                       </span>
                     </div>

@@ -287,7 +287,7 @@ const SeatSelection = () => {
               Retry
             </button>
             <Link to="/search-bus" className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
-              Back to Search
+              Back to  Search
             </Link>
           </div>
         </div>
@@ -303,7 +303,7 @@ const SeatSelection = () => {
         <div className="mb-6 flex flex-col gap-4 rounded-3xl bg-slate-900 px-5 py-4 text-white shadow-xl dark:border dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/search-bus")}
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 transition hover:bg-white/10"
               title="Go Back"
             >

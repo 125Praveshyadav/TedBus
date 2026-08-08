@@ -4,7 +4,7 @@ import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import {
   Navigation, Plus, X, Loader2, Clock, Ruler,
   Bookmark, RotateCcw, Trash2, ChevronRight,
-  BookmarkCheck, TrafficCone, ArrowDownUp,
+  BookmarkCheck, ArrowDownUp, Sparkles, Radio,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useTheme } from "../../components/context/ThemeContext";
@@ -27,7 +27,7 @@ const createMarker = (map, lngLat, color = "#dc2626", label = "") => {
     border: 3px solid white;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2);
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   `;
@@ -72,7 +72,8 @@ const drawRoute = (map, points, color = "#dc2626", layerId) => {
   });
 };
 
-const routeColors = ["#dc2626", "#64748b", "#94a3b8"];
+// Premium, restrained accent set — deep crimson primary, cool slate for alternates.
+const routeColors = ["#B91C1C", "#64748b", "#cbd5e1"];
 
 // ============================================
 //  MAIN COMPONENT
@@ -213,13 +214,13 @@ const RoutePlanner = () => {
       const startMarker = createMarker(
         map,
         [startPlace.lng, startPlace.lat],
-        "#16a34a",
+        "#10b981",
         "A"
       );
       const endMarker = createMarker(
         map,
         [endPlace.lng, endPlace.lat],
-        "#dc2626",
+        "#B91C1C",
         "B"
       );
       markersRef.current = [startMarker, endMarker];
@@ -382,21 +383,66 @@ const RoutePlanner = () => {
 
   // ============ UI ============
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 to-white transition-colors duration-300 dark:from-slate-950 dark:to-slate-900">
+      <style>{`
+        @keyframes rpFadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes rpFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes rpGlowPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(185,28,28,0.35); }
+          50% { box-shadow: 0 0 0 8px rgba(185,28,28,0); }
+        }
+        @keyframes rpShine {
+          from { transform: translateX(-130%) skewX(-12deg); }
+          to { transform: translateX(230%) skewX(-12deg); }
+        }
+        @keyframes rpDot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.4; transform: scale(0.8); }
+        }
+        .rp-panel { animation: rpFadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+        .rp-panel:nth-child(1) { animation-delay: 0.02s; }
+        .rp-panel:nth-child(2) { animation-delay: 0.08s; }
+        .rp-panel:nth-child(3) { animation-delay: 0.14s; }
+        .rp-route-row { animation: rpFadeIn 0.4s ease both; }
+        .rp-logo-ring { animation: rpGlowPulse 2.4s ease-in-out infinite; }
+        .rp-btn-primary { position: relative; overflow: hidden; }
+        .rp-btn-primary .shine { position: absolute; inset: 0; }
+        .rp-btn-primary:hover .shine::before {
+          content: ""; position: absolute; inset-block: 0; width: 34%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+          animation: rpShine 0.9s ease;
+        }
+        .rp-live-dot { animation: rpDot 1.6s ease-in-out infinite; }
+      `}</style>
+
+      {/* Ambient background glow — subtle, premium */}
+      <div className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-red-400/10 blur-3xl dark:bg-red-600/10" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-amber-300/10 blur-3xl dark:bg-amber-500/5" />
+
+      <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-600 text-white shadow-lg shadow-red-500/25">
+            <div className="rp-logo-ring flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 via-red-700 to-rose-800 text-white shadow-lg shadow-red-600/30">
               <Navigation className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                Route <span className="text-red-600 dark:text-red-500">Planner</span>
+              <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white sm:text-2xl">
+                Route{" "}
+                <span className="bg-gradient-to-r from-red-600 to-rose-500 bg-clip-text text-transparent">
+                  Planner
+                </span>
               </h1>
-              <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                Live traffic • Alternative routes • Smart ETA
+              <p className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                <Radio className="h-3 w-3 text-red-500" />
+                Live traffic &middot; Alternative routes &middot; Smart ETA
               </p>
             </div>
           </div>
@@ -404,10 +450,10 @@ const RoutePlanner = () => {
           {/* Saved Routes Toggle */}
           <button
             onClick={() => setShowSaved(!showSaved)}
-            className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-black transition-all ${
+            className={`flex items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-black transition-all duration-300 ${
               showSaved
-                ? "bg-red-600 text-white"
-                : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                ? "bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-md shadow-red-500/25"
+                : "border border-slate-200 bg-white text-slate-600 hover:border-red-200 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-red-900/50"
             }`}
           >
             <BookmarkCheck size={14} />
@@ -415,14 +461,14 @@ const RoutePlanner = () => {
           </button>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-[370px_1fr]">
+        <div className="grid gap-4 lg:grid-cols-[380px_1fr]">
 
           {/* ===== LEFT PANEL ===== */}
           <div className="flex flex-col gap-4">
 
             {/* Saved Routes Panel */}
             {showSaved && (
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div className="rp-panel rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm shadow-slate-900/5 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
                 <h3 className="mb-3 text-xs font-black uppercase tracking-widest text-slate-400">
                   Saved Routes
                 </h3>
@@ -437,32 +483,33 @@ const RoutePlanner = () => {
                   </p>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    {savedRoutes.map((route) => (
+                    {savedRoutes.map((route, i) => (
                       <div
                         key={route._id}
-                        className="flex items-center justify-between gap-2 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 p-3"
+                        className="rp-route-row flex items-center justify-between gap-2 rounded-xl border border-slate-100 bg-slate-50 p-3 transition-colors duration-300 hover:border-red-100 hover:bg-red-50/40 dark:border-slate-800 dark:bg-slate-800/50 dark:hover:border-red-900/40"
+                        style={{ animationDelay: `${i * 0.05}s` }}
                       >
                         <button
                           onClick={() => loadSavedRoute(route)}
                           className="flex-1 text-left"
                         >
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">
+                          <p className="truncate text-sm font-bold text-slate-800 dark:text-slate-200">
                             {route.name}
                           </p>
-                          <p className="text-[10px] text-slate-400 mt-0.5 truncate">
+                          <p className="mt-0.5 truncate text-[10px] text-slate-400">
                             {route.start.name} → {route.end.name}
                           </p>
                         </button>
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => loadSavedRoute(route)}
-                            className="p-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white transition-all"
+                            className="rounded-lg bg-red-50 p-1.5 text-red-600 transition-all duration-300 hover:scale-105 hover:bg-red-600 hover:text-white dark:bg-red-900/20 dark:text-red-400"
                           >
                             <ChevronRight size={13} />
                           </button>
                           <button
                             onClick={() => deleteSavedRoute(route._id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                            className="rounded-lg p-1.5 text-slate-400 transition-all duration-300 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
                           >
                             <Trash2 size={13} />
                           </button>
@@ -475,7 +522,7 @@ const RoutePlanner = () => {
             )}
 
             {/* Search Card */}
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+            <div className="rp-panel rounded-2xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5 transition-shadow duration-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
               <h3 className="mb-3 text-xs font-black uppercase tracking-widest text-slate-400">
                 Plan Route
               </h3>
@@ -487,7 +534,7 @@ const RoutePlanner = () => {
                 </label>
                 <LocationSearchInput
                   placeholder="Start location..."
-                  iconColor="text-green-600"
+                  iconColor="text-emerald-600"
                   value={startValue}
                   onSelect={(p) => { setStartPlace(p); setStartValue(p.name); }}
                   onClear={() => { setStartPlace(null); setStartValue(""); }}
@@ -496,7 +543,7 @@ const RoutePlanner = () => {
 
               {/* Waypoints */}
               {waypoints.map((wp, idx) => (
-                <div key={wp.id} className="mb-2">
+                <div key={wp.id} className="rp-route-row mb-2">
                   <label className="mb-1 block text-[10px] font-bold text-slate-500 dark:text-slate-400">
                     STOP {idx + 1}
                   </label>
@@ -504,7 +551,7 @@ const RoutePlanner = () => {
                     <div className="flex-1">
                       <LocationSearchInput
                         placeholder={`Add stop ${idx + 1}...`}
-                        iconColor="text-orange-500"
+                        iconColor="text-amber-500"
                         value={wp.value}
                         onSelect={(p) => updateWaypointPlace(wp.id, p)}
                         onClear={() => updateWaypointPlace(wp.id, null)}
@@ -512,7 +559,7 @@ const RoutePlanner = () => {
                     </div>
                     <button
                       onClick={() => removeWaypoint(wp.id)}
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white transition-all"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-600 transition-all duration-300 hover:scale-105 hover:bg-red-600 hover:text-white dark:bg-red-900/20 dark:text-red-400"
                     >
                       <X size={15} />
                     </button>
@@ -539,8 +586,9 @@ const RoutePlanner = () => {
                 <button
                   onClick={handleCalculate}
                   disabled={loading || !startPlace || !endPlace}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-600 py-3 text-sm font-black text-white shadow-lg shadow-red-500/25 transition hover:bg-red-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rp-btn-primary flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 via-red-600 to-rose-700 py-3 text-sm font-black text-white shadow-lg shadow-red-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-500/30 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                 >
+                  <span className="shine" />
                   {loading ? (
                     <><Loader2 size={16} className="animate-spin" /> Finding...</>
                   ) : (
@@ -552,7 +600,7 @@ const RoutePlanner = () => {
                   onClick={addWaypoint}
                   title="Add stop"
                   disabled={waypoints.length >= 3}
-                  className="flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 text-slate-600 dark:text-slate-300 hover:border-red-200 hover:text-red-600 transition-all disabled:opacity-40"
+                  className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-slate-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-red-200 hover:text-red-600 disabled:opacity-40 disabled:hover:translate-y-0 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 >
                   <Plus size={16} />
                 </button>
@@ -560,7 +608,7 @@ const RoutePlanner = () => {
                 <button
                   onClick={handleReset}
                   title="Reset"
-                  className="flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 text-slate-600 dark:text-slate-300 hover:border-red-200 hover:text-red-600 transition-all"
+                  className="flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-slate-600 transition-all duration-300 hover:-translate-y-0.5 hover:border-red-200 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                 >
                   <RotateCcw size={16} />
                 </button>
@@ -569,14 +617,14 @@ const RoutePlanner = () => {
 
             {/* Route Comparison Cards */}
             {routes.length > 0 && (
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
+              <div className="rp-panel rounded-2xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900">
                 <div className="mb-3 flex items-center justify-between">
                   <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">
                     {routes.length} Route{routes.length > 1 ? "s" : ""} Found
                   </h3>
                   <button
                     onClick={handleSaveRoute}
-                    className="flex items-center gap-1.5 text-[10px] font-black uppercase text-red-600 dark:text-red-400 hover:text-red-700 transition-colors"
+                    className="flex items-center gap-1.5 text-[10px] font-black uppercase text-red-600 transition-colors duration-300 hover:text-red-700 dark:text-red-400"
                   >
                     <Bookmark size={12} /> Save Route
                   </button>
@@ -591,20 +639,22 @@ const RoutePlanner = () => {
                       <button
                         key={idx}
                         onClick={() => handleSelectRoute(idx)}
-                        className={`w-full rounded-xl border-2 p-3 text-left transition-all ${
+                        style={{ animationDelay: `${idx * 0.06}s` }}
+                        className={`rp-route-row w-full rounded-xl border-2 p-3 text-left transition-all duration-300 ${
                           selected
-                            ? "border-red-500 bg-red-50 dark:bg-red-900/20"
-                            : "border-slate-100 dark:border-slate-800 hover:border-slate-200 dark:hover:border-slate-700"
+                            ? "border-red-500 bg-gradient-to-br from-red-50 to-rose-50/60 shadow-sm shadow-red-500/10 dark:border-red-500/70 dark:from-red-900/20 dark:to-rose-900/10"
+                            : "border-slate-100 hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-sm dark:border-slate-800 dark:hover:border-slate-700"
                         }`}
                       >
                         {/* Route header */}
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="mb-2 flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div
                               className="h-2.5 w-2.5 rounded-full"
                               style={{ backgroundColor: routeColors[idx] || "#94a3b8" }}
                             />
-                            <span className={`text-sm font-black ${selected ? "text-red-600 dark:text-red-400" : "text-slate-700 dark:text-slate-300"}`}>
+                            <span className={`flex items-center gap-1 text-sm font-black ${selected ? "text-red-600 dark:text-red-400" : "text-slate-700 dark:text-slate-300"}`}>
+                              {idx === 0 && <Sparkles size={12} className="text-amber-500" />}
                               {idx === 0 ? "Recommended" : `Alternative ${idx}`}
                             </span>
                           </div>
@@ -622,7 +672,7 @@ const RoutePlanner = () => {
                             <Clock size={11} /> {route.durationText}
                           </span>
                           {route.trafficDelaySeconds > 60 && (
-                            <span className="text-red-500 dark:text-red-400 font-black">
+                            <span className="font-black text-red-500 dark:text-red-400">
                               +{route.trafficDelayText} delay
                             </span>
                           )}
@@ -644,9 +694,14 @@ const RoutePlanner = () => {
 
           {/* ===== MAP ===== */}
           <div
-            className="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm"
+            className="rp-panel relative overflow-hidden rounded-2xl border border-slate-200 shadow-md shadow-slate-900/5 dark:border-slate-800"
             style={{ height: "calc(100vh - 11rem)", minHeight: "450px" }}
           >
+            {/* Live traffic badge */}
+            <div className="pointer-events-none absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-950/60 px-2.5 py-1.5 text-[10px] font-bold text-white backdrop-blur-md">
+              <span className="rp-live-dot h-1.5 w-1.5 rounded-full bg-red-500" />
+              Live traffic
+            </div>
             <div ref={mapContainerRef} style={{ width: "100%", height: "100%" }} />
           </div>
         </div>

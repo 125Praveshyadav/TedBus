@@ -13,6 +13,7 @@ const LocationSearchInput = ({
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [focused, setFocused] = useState(false);
   const debounceRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -69,40 +70,68 @@ const LocationSearchInput = ({
 
   return (
     <div ref={containerRef} className="relative w-full">
-      <div className="relative">
-        <MapPin className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${iconColor}`} />
+      <style>{`
+        @keyframes lsiDropIn {
+          from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes lsiRowIn {
+          from { opacity: 0; transform: translateX(-4px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .lsi-dropdown { animation: lsiDropIn 0.18s cubic-bezier(0.22,1,0.36,1) both; transform-origin: top; }
+        .lsi-row { animation: lsiRowIn 0.22s ease both; }
+      `}</style>
+
+      <div
+        className={`relative rounded-2xl transition-all duration-300 ${
+          focused ? "ring-4 ring-red-500/10" : ""
+        }`}
+      >
+        <MapPin
+          className={`pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 transition-transform duration-300 ${iconColor} ${
+            focused ? "scale-110" : ""
+          }`}
+        />
         <input
           type="text"
           value={query}
           onChange={handleChange}
-          onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
+          onFocus={() => {
+            setFocused(true);
+            suggestions.length > 0 && setShowDropdown(true);
+          }}
+          onBlur={() => setFocused(false)}
           placeholder={placeholder}
-          className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-2.5 pl-9 pr-8 text-sm font-bold text-slate-800 dark:text-slate-200 outline-none transition focus:border-red-500 focus:bg-white dark:focus:bg-slate-800 focus:ring-4 focus:ring-red-500/10 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+          className="w-full rounded-2xl border border-slate-200 bg-slate-50/80 py-3 pl-10 pr-9 text-sm font-bold text-slate-800 placeholder:font-medium placeholder:text-slate-400 outline-none transition-all duration-300 focus:border-red-400 focus:bg-white dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-red-500/60 dark:focus:bg-slate-800"
         />
         {loading && (
-          <Loader2 className="absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin text-slate-400" />
+          <Loader2 className="absolute right-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 animate-spin text-red-500" />
         )}
         {!loading && query && (
           <button
             onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-600 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 transition-all duration-200 hover:scale-110 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
           >
-            <X size={14} />
+            <X size={13} />
           </button>
         )}
       </div>
 
       {/* Dropdown */}
       {showDropdown && suggestions.length > 0 && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xl shadow-slate-900/10">
-          {suggestions.map((place) => (
+        <div className="lsi-dropdown absolute left-0 top-full z-50 mt-1.5 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-xl shadow-slate-900/10 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95">
+          {suggestions.map((place, i) => (
             <button
               key={place.id}
               onClick={() => handleSelect(place)}
-              className="flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 border-b border-slate-50 dark:border-slate-800 last:border-0"
+              style={{ animationDelay: `${i * 0.03}s` }}
+              className="lsi-row group flex w-full items-start gap-3 border-b border-slate-50 px-3.5 py-3 text-left transition-colors duration-200 last:border-0 hover:bg-red-50/60 dark:border-slate-800 dark:hover:bg-red-900/10"
             >
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300 line-clamp-2">
+              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-500 transition-colors duration-200 group-hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:group-hover:bg-red-900/30">
+                <MapPin className="h-3.5 w-3.5" />
+              </span>
+              <span className="line-clamp-2 pt-1 text-sm font-medium text-slate-700 dark:text-slate-300">
                 {place.name}
               </span>
             </button>

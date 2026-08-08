@@ -1,166 +1,276 @@
-import { useState } from "react";
-import { AlertCircle, Loader2, MessageSquare, Star, X } from "lucide-react";
-import { toast } from "react-toastify";
+import { useEffect, useRef, useState } from "react";
+import {
+  AlertCircle,
+  Award,
+  BusFront,
+  CalendarDays,
+  Loader2,
+  MapPin,
+  X,
+} from "lucide-react";
 
+import ReviewForm from "./ReviewForm";
 import reviewService from "../../services/reviewService";
 
-const ReviewModal = ({ booking, onClose, onReviewSubmitted }) => {
-  const [rating, setRating] = useState(5);
-  const [hoveredRating, setHoveredRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
+const formatDate = (date) => {
+  if (!date) return "";
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return date;
+  return parsed.toLocaleDateString("en-IN", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
 
-  const bus = booking?.bus || booking?.busDetails || {};
-  const busId = bus?._id || bus?.id || booking?.busId;
+const ReviewModal = ({
+  booking,
+  onClose,
+  onReviewSubmitted,
+}) => {
+  const overlayRef = useRef(null);
 
-  const bookingId = booking?._id || booking?.id;
+  const [checking, setChecking] = useState(true);
+  const [reviewStatus, setReviewStatus] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const bookingId =
+    booking?.id ||
+    booking?._id ||
+    booking?.bookingId ||
+    "";
 
-    setError("");
+  const busId =
+    booking?.bus?._id ||
+    booking?.bus?.id ||
+    booking?.busId ||
+    "";
 
-    if (!bookingId || !busId) {
-      setError("Booking or bus details missing");
-      return;
-    }
+  const busName =
+    booking?.busName ||
+    booking?.bus?.name ||
+    booking?.bus?.busName ||
+    "TedBus Partner";
 
-    if (!rating) {
-      setError("Please select a rating");
-      return;
-    }
+  const source =
+    booking?.source ||
+    booking?.bus?.source ||
+    "";
 
-    if (!comment.trim()) {
-      setError("Please write a review comment");
-      return;
-    }
+  const destination =
+    booking?.destination ||
+    booking?.bus?.destination ||
+    "";
 
-    if (comment.trim().length < 10) {
-      setError("Review must be at least 10 characters");
-      return;
-    }
+  const journeyDate =
+    booking?.journeyDate ||
+    booking?.bus?.journeyDate ||
+    "";
 
-    try {
-      setSubmitting(true);
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
 
-      const response = await reviewService.createReview({
-        bookingId,
-        busId,
-        rating,
-        comment: comment.trim(),
-      });
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () =>
+      document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
 
-      toast.success(response?.message || "Review submitted successfully");
+  useEffect(() => {
+    const checkEligibility = async () => {
+      try {
+        setChecking(true);
 
-      onReviewSubmitted?.(response?.review || response?.data?.review);
-      onClose?.();
-    } catch (err) {
-      const message = err?.message || "Unable to submit review";
-      setError(message);
-      toast.error(message);
-    } finally {
-      setSubmitting(false);
-    }
+        if (!bookingId) {
+          setReviewStatus({
+            canReview: false,
+            message: "Booking ID missing",
+          });
+          return;
+        }
+
+        const data = await reviewService.checkCanReview(
+          bookingId,
+        );
+
+        setReviewStatus(data);
+      } catch (err) {
+        setReviewStatus({
+          canReview: false,
+          alreadyReviewed: false,
+          canEdit: false,
+          message:
+            err?.data?.message ||
+            err?.response?.data?.message ||
+            err?.message ||
+            "Unable to verify review eligibility",
+        });
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    checkEligibility();
+  }, [bookingId]);
+
+  const handleBackdropClick = (e) => {
+    if (e.target === overlayRef.current) onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-lg overflow-hidden rounded-3xl bg-white dark:bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b  border-slate-100 dark:border-slate-800 p-6">
-          <div>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-              Rate Your Journey
-            </h2>
-            <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
-              {bus?.busName || bus?.name || "TedBus Partner"}
-            </p>
-          </div>
+    <div
+      ref={overlayRef}
+      onClick={handleBackdropClick}
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+    >
+      <div className="w-full max-w-lg animate-in slide-in-from-bottom duration-300 sm:rounded-[2rem]">
+        <div className="max-h-[90vh] overflow-hidden rounded-t-[2rem] border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900 sm:rounded-[2rem]">
+          {/* Compact Header */}
+          <div className="relative overflow-hidden bg-gradient-to-br from-amber-600 via-orange-500 to-yellow-500 px-4 py-4 text-white sm:px-5">
+            <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/15 blur-2xl" />
+            <div className="pointer-events-none absolute -bottom-12 left-0 h-24 w-24 rounded-full bg-orange-300/25 blur-2xl" />
 
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={submitting}
-            className="rounded-2xl bg-slate-100 dark:bg-slate-800 dark:bg-slate-800 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+            <div className="relative flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/15 backdrop-blur-xl">
+                  <Award className="h-4 w-4" />
+                </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          {error && (
-            <div className="mb-5 rounded-2xl border border-red-100 dark:border-red-900/50 bg-red-50 dark:bg-red-900/30 p-4">
-              <p className="flex items-start gap-2 text-sm font-bold text-red-700">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                {error}
-              </p>
-            </div>
-          )}
+                <div className="min-w-0">
+                  <div className="mb-1 inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-white/80">
+                    Rate Journey
+                  </div>
 
-          <div className="rounded-3xl bg-slate-50 dark:bg-slate-950 p-5">
-            <p className="text-sm font-black text-slate-700 dark:text-slate-300">
-              How was your travel experience?
-            </p>
+                  <h2 className="truncate text-sm font-black sm:text-base">
+                    Your Travel Experience
+                  </h2>
 
-            <div className="mt-4 flex gap-2">
-              {[1, 2, 3, 4, 5].map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onMouseEnter={() => setHoveredRating(item)}
-                  onMouseLeave={() => setHoveredRating(0)}
-                  onClick={() => setRating(item)}
-                  className="transition active:scale-95"
-                >
-                  <Star
-                    className={`h-9 w-9 ${
-                      item <= (hoveredRating || rating)
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-slate-300"
-                    }`}
-                  />
-                </button>
-              ))}
+                  <p className="mt-0.5 text-[10px] font-medium text-amber-100/80">
+                    Share honest feedback
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
-            <p className="mt-2 text-sm font-bold text-slate-500 dark:text-slate-400">
-              {rating} out of 5
-            </p>
+            {/* Compact Booking Strip */}
+            <div className="relative mt-3 grid grid-cols-3 divide-x divide-white/15 overflow-hidden rounded-xl border border-white/10 bg-black/10 backdrop-blur-xl">
+              <div className="flex items-center gap-2 p-2.5">
+                <BusFront className="h-3.5 w-3.5 shrink-0 text-white/70" />
+                <div className="min-w-0">
+                  <p className="text-[7px] font-black uppercase tracking-wider text-white/60">
+                    Bus
+                  </p>
+                  <p className="truncate text-[9px] font-black">
+                    {busName}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 p-2.5">
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-white/70" />
+                <div className="min-w-0">
+                  <p className="text-[7px] font-black uppercase tracking-wider text-white/60">
+                    Route
+                  </p>
+                  <p className="truncate text-[9px] font-black">
+                    {source && destination
+                      ? `${source} → ${destination}`
+                      : "—"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 p-2.5">
+                <CalendarDays className="h-3.5 w-3.5 shrink-0 text-white/70" />
+                <div className="min-w-0">
+                  <p className="text-[7px] font-black uppercase tracking-wider text-white/60">
+                    Date
+                  </p>
+                  <p className="truncate text-[9px] font-black">
+                    {formatDate(journeyDate) || "—"}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-5">
-            <label className="mb-2 flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-300">
-              <MessageSquare className="h-4 w-4 text-red-600" />
-              Review Comment
-            </label>
+          {/* Scrollable Body */}
+          <div className="max-h-[calc(90vh-145px)] overflow-y-auto p-4 sm:p-5">
+            {checking ? (
+              <div className="flex flex-col items-center justify-center py-10">
+                <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+                <p className="mt-3 text-sm font-bold text-slate-500 dark:text-slate-400">
+                  Checking review eligibility...
+                </p>
+              </div>
+            ) : reviewStatus?.canReview ? (
+              <ReviewForm
+                bookingId={bookingId}
+                busId={busId}
+                onSuccess={(review) => {
+                  onReviewSubmitted?.(review);
+                  onClose();
+                }}
+              />
+            ) : reviewStatus?.alreadyReviewed && reviewStatus?.canEdit ? (
+              <div>
+                <div className="mb-4 rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-violet-900/50 dark:bg-violet-950/30">
+                  <p className="text-sm font-black text-violet-700 dark:text-violet-400">
+                    You already reviewed this journey.
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-violet-600 dark:text-violet-400">
+                    You can still edit it within 24 hours.
+                  </p>
+                </div>
 
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              rows={5}
-              maxLength={500}
-              placeholder="Tell us about bus comfort, punctuality, staff behavior..."
-              className="w-full resize-none rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-3 text-sm font-semibold text-slate-800 dark:text-slate-200 outline-none transition focus:border-red-500 focus:bg-white dark:bg-slate-900 focus:ring-4 focus:ring-red-500/10"
-            />
-
-            <p className="mt-1 text-right text-xs font-semibold text-slate-400">
-              {comment.length}/500
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-red-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-red-500/25 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {submitting ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+                <ReviewForm
+                  bookingId={bookingId}
+                  busId={busId}
+                  existingReview={reviewStatus.review}
+                  onSuccess={(review) => {
+                    onReviewSubmitted?.(review);
+                    onClose();
+                  }}
+                />
+              </div>
             ) : (
-              <Star className="h-5 w-5" />
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center dark:border-amber-900/50 dark:bg-amber-950/30">
+                <AlertCircle className="mx-auto h-8 w-8 text-amber-600 dark:text-amber-400" />
+
+                <h3 className="mt-3 text-base font-black text-slate-900 dark:text-white">
+                  Review unavailable
+                </h3>
+
+                <p className="mt-2 text-sm font-medium text-slate-600 dark:text-slate-400">
+                  {reviewStatus?.message ||
+                    "You cannot review this journey right now."}
+                </p>
+
+                {reviewStatus?.alreadyReviewed &&
+                  !reviewStatus?.canEdit && (
+                    <div className="mt-4 rounded-xl bg-white/70 px-4 py-3 text-xs font-bold text-slate-500 dark:bg-slate-900/40 dark:text-slate-400">
+                      This journey has already been reviewed and the edit window has expired.
+                    </div>
+                  )}
+              </div>
             )}
-            {submitting ? "Submitting..." : "Submit Review"}
-          </button>
-        </form>
+          </div>
+        </div>
       </div>
     </div>
   );
