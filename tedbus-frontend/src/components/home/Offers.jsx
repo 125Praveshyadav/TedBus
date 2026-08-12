@@ -454,23 +454,23 @@ const ExpiryCountdown = ({
   if (countdown.status === "no-expiry") {
     return (
       <div
-        className={`rounded-2xl border p-3.5 ${theme.softBorder} ${theme.softBg}`}
+        className={`rounded-xl border p-2.5 ${theme.softBorder} ${theme.softBg}`}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${theme.softBg} ${theme.accentText}`}
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${theme.softBg} ${theme.accentText}`}
           >
-            <CalendarDays className="h-5 w-5" />
+            <CalendarDays className="h-4 w-4" />
           </div>
 
           <div>
             <p
-              className={`text-[10px] font-black uppercase tracking-wider ${theme.accentText}`}
+              className={`text-[9px] font-black uppercase tracking-wider ${theme.accentText}`}
             >
               Offer validity
             </p>
 
-            <p className="mt-0.5 text-sm font-black text-slate-800 dark:text-slate-200">
+            <p className="mt-0.5 text-xs font-black text-slate-800 dark:text-slate-200">
               Available for a limited period
             </p>
           </div>
@@ -481,18 +481,18 @@ const ExpiryCountdown = ({
 
   if (countdown.isExpired) {
     return (
-      <div className="rounded-2xl border border-red-200 bg-red-50 p-3.5 dark:border-red-900/50 dark:bg-red-950/30">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
-            <AlertCircle className="h-5 w-5" />
+      <div className="rounded-xl border border-red-200 bg-red-50 p-2.5 dark:border-red-900/50 dark:bg-red-950/30">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400">
+            <AlertCircle className="h-4 w-4" />
           </div>
 
           <div>
-            <p className="text-[10px] font-black uppercase tracking-wider text-red-500">
+            <p className="text-[9px] font-black uppercase tracking-wider text-red-500">
               Offer status
             </p>
 
-            <p className="mt-0.5 text-sm font-black text-red-700 dark:text-red-300">
+            <p className="mt-0.5 text-xs font-black text-red-700 dark:text-red-300">
               This coupon has expired
             </p>
           </div>
@@ -510,16 +510,16 @@ const ExpiryCountdown = ({
 
   return (
     <div
-      className={`rounded-2xl border p-3.5 transition-colors ${
+      className={`rounded-xl border p-2.5 transition-colors ${
         countdown.isUrgent
           ? theme.countdownUrgent
           : theme.countdownActive
       }`}
     >
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5">
           <Clock3
-            className={`h-4 w-4 ${
+            className={`h-3.5 w-3.5 ${
               countdown.isUrgent
                 ? theme.countdownUrgentText
                 : theme.countdownText
@@ -527,7 +527,7 @@ const ExpiryCountdown = ({
           />
 
           <p
-            className={`text-[10px] font-black uppercase tracking-[0.15em] ${
+            className={`text-[9px] font-black uppercase tracking-[0.12em] ${
               countdown.isUrgent
                 ? theme.countdownUrgentText
                 : "text-slate-500 dark:text-slate-400"
@@ -539,23 +539,23 @@ const ExpiryCountdown = ({
           </p>
         </div>
 
-        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500">
+        <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500">
           {formatExpiryDate(expiryDate)}
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+      <div className="grid grid-cols-4 gap-1 sm:gap-1.5">
         {units.map((u) => (
           <div
             key={u.label}
-            className={`rounded-xl border px-1 py-2 text-center shadow-sm ${
+            className={`rounded-lg border px-1 py-1.5 text-center shadow-sm ${
               countdown.isUrgent
                 ? theme.unitUrgentBorder
                 : theme.unitBorder
             }`}
           >
             <p
-              className={`text-base font-black tabular-nums sm:text-lg ${
+              className={`text-sm font-black tabular-nums sm:text-base ${
                 countdown.isUrgent
                   ? theme.countdownUrgentText
                   : "text-slate-900 dark:text-white"
@@ -564,7 +564,7 @@ const ExpiryCountdown = ({
               {String(u.value).padStart(2, "0")}
             </p>
 
-            <p className="mt-0.5 text-[8px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            <p className="mt-0.5 text-[7px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
               {u.label}
             </p>
           </div>
@@ -578,15 +578,15 @@ const OfferSkeleton = ({ index }) => {
   const theme = getTheme(index);
 
   return (
-    <div className="w-[86vw] max-w-[410px] shrink-0 snap-start overflow-hidden rounded-[2rem] border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 sm:w-[390px] lg:w-[410px]">
+    <div className="w-[72vw] max-w-[300px] shrink-0 snap-start overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 sm:w-[280px] lg:w-[300px]">
       <div
-        className={`h-56 animate-pulse bg-gradient-to-br ${theme.gradient} opacity-40`}
+        className={`h-40 animate-pulse bg-gradient-to-br ${theme.gradient} opacity-40`}
       />
 
-      <div className="space-y-4 p-5">
-        <div className="h-5 w-2/3 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
-        <div className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
-        <div className="h-16 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-800" />
+      <div className="space-y-3 p-4">
+        <div className="h-4 w-2/3 animate-pulse rounded-full bg-slate-200 dark:bg-slate-800" />
+        <div className="h-16 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+        <div className="h-12 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
       </div>
     </div>
   );
@@ -781,7 +781,7 @@ const Offers = () => {
   };
 
   return (
-    <section className="relative isolate overflow-hidden bg-slate-50 py-16 transition-colors duration-300 dark:bg-slate-950 sm:py-20 lg:py-24">
+    <section className="relative isolate overflow-hidden bg-slate-50 py-12 transition-colors duration-300 dark:bg-slate-950 sm:py-16 lg:py-20">
       {/* Background */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-50/80 via-transparent to-orange-50/80 dark:from-red-950/20 dark:via-transparent dark:to-orange-950/10" />
 
@@ -795,27 +795,27 @@ const Offers = () => {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-10 flex flex-col gap-6 sm:mb-12 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mb-8 flex flex-col gap-5 sm:mb-10 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-red-100 bg-white/90 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-red-600 shadow-sm backdrop-blur dark:border-red-900/50 dark:bg-slate-900/80 dark:text-red-400">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-100 bg-white/90 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-red-600 shadow-sm backdrop-blur dark:border-red-900/50 dark:bg-slate-900/80 dark:text-red-400">
               <Sparkles className="h-3.5 w-3.5" />
               Limited-time travel deals
             </div>
 
-            <div className="flex items-start gap-4">
-              <div className="hidden h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-orange-500 text-white shadow-lg shadow-red-500/25 sm:flex">
-                <Gift className="h-7 w-7" />
+            <div className="flex items-start gap-3">
+              <div className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-orange-500 text-white shadow-lg shadow-red-500/25 sm:flex">
+                <Gift className="h-5.5 w-5.5" />
               </div>
 
               <div>
-                <h2 className="text-3xl font-black tracking-[-0.03em] text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">
+                <h2 className="text-2xl font-black tracking-[-0.03em] text-slate-950 dark:text-white sm:text-3xl lg:text-4xl">
                   Exclusive TedBus
                   <span className="ml-2 bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">
                     Offers
                   </span>
                 </h2>
 
-                <p className="mt-3 max-w-xl text-sm font-medium leading-7 text-slate-500 dark:text-slate-400 sm:text-base">
+                <p className="mt-2 max-w-xl text-xs font-medium leading-6 text-slate-500 dark:text-slate-400 sm:text-sm">
                   Unlock verified coupons and save more on
                   your next bus journey.
                 </p>
@@ -825,12 +825,12 @@ const Offers = () => {
 
           {!loading && !error && offers.length > 0 && (
             <div className="flex items-center justify-between gap-3 sm:justify-start">
-              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-2.5 dark:border-emerald-900/40 dark:bg-emerald-950/25">
-                <p className="text-[9px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 dark:border-emerald-900/40 dark:bg-emerald-950/25">
+                <p className="text-[8px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                   Live deals
                 </p>
 
-                <p className="text-lg font-black text-emerald-700 dark:text-emerald-300">
+                <p className="text-base font-black text-emerald-700 dark:text-emerald-300">
                   {activeOfferCount}
                 </p>
               </div>
@@ -844,9 +844,9 @@ const Offers = () => {
                     }
                     disabled={!canScrollLeft}
                     aria-label="Previous offer"
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-red-900 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-red-900 dark:hover:bg-red-950/30 dark:hover:text-red-400"
                   >
-                    <ArrowLeft className="h-5 w-5" />
+                    <ArrowLeft className="h-4 w-4" />
                   </button>
 
                   <button
@@ -856,9 +856,9 @@ const Offers = () => {
                     }
                     disabled={!canScrollRight}
                     aria-label="Next offer"
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-red-900 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-red-900 dark:hover:bg-red-950/30 dark:hover:text-red-400"
                   >
-                    <ArrowRight className="h-5 w-5" />
+                    <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
               )}
@@ -868,7 +868,7 @@ const Offers = () => {
 
         {/* Loading */}
         {loading && (
-          <div className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-hidden px-4 pb-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+          <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-hidden px-4 pb-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
             {[0, 1, 2].map((i) => (
               <OfferSkeleton key={i} index={i} />
             ))}
@@ -877,15 +877,15 @@ const Offers = () => {
 
         {/* Error */}
         {!loading && error && (
-          <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] border border-red-100 bg-white p-7 text-center shadow-xl shadow-red-500/5 dark:border-red-900/40 dark:bg-slate-900 sm:p-9">
+          <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-red-100 bg-white p-6 text-center shadow-xl shadow-red-500/5 dark:border-red-900/40 dark:bg-slate-900 sm:p-8">
             <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-red-200/40 blur-3xl dark:bg-red-900/20" />
 
             <div className="relative">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400">
-                <AlertCircle className="h-8 w-8" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400">
+                <AlertCircle className="h-7 w-7" />
               </div>
 
-              <h3 className="mt-5 text-2xl font-black text-slate-900 dark:text-white">
+              <h3 className="mt-4 text-xl font-black text-slate-900 dark:text-white">
                 Offers unavailable
               </h3>
 
@@ -896,7 +896,7 @@ const Offers = () => {
               <button
                 type="button"
                 onClick={fetchOffers}
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-orange-500 px-6 py-3 text-sm font-black text-white shadow-lg shadow-red-500/25 transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98]"
+                className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-orange-500 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-red-500/25 transition hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.98]"
               >
                 <Loader2 className="h-4 w-4" />
                 Try Again
@@ -907,15 +907,15 @@ const Offers = () => {
 
         {/* Empty */}
         {!loading && !error && offers.length === 0 && (
-          <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900">
+          <div className="relative mx-auto max-w-2xl overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white p-7 text-center shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900">
             <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-orange-200/30 blur-3xl dark:bg-orange-900/10" />
 
             <div className="relative">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500">
-                <TicketPercent className="h-8 w-8" />
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500">
+                <TicketPercent className="h-7 w-7" />
               </div>
 
-              <h3 className="mt-5 text-xl font-black text-slate-900 dark:text-white">
+              <h3 className="mt-4 text-lg font-black text-slate-900 dark:text-white">
                 No active offers right now
               </h3>
 
@@ -932,7 +932,7 @@ const Offers = () => {
           <>
             <div
               ref={carouselRef}
-              className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-7 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 lg:mx-0 lg:px-1"
+              className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-6 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 lg:mx-0 lg:px-1"
               role="list"
               aria-label="Active coupon offers"
               tabIndex={0}
@@ -969,7 +969,7 @@ const Offers = () => {
                     }
                     data-offer-card
                     role="listitem"
-                    className={`group relative flex w-[86vw] max-w-[410px] shrink-0 snap-start flex-col overflow-hidden rounded-[2rem] border bg-white shadow-lg shadow-slate-900/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl dark:bg-slate-900 dark:shadow-black/20 sm:w-[390px] lg:w-[410px] ${
+                    className={`group relative flex w-[72vw] max-w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-[1.5rem] border bg-white shadow-lg shadow-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl dark:bg-slate-900 dark:shadow-black/20 sm:w-[280px] lg:w-[300px] ${
                       countdown.isExpired
                         ? "border-slate-200 opacity-80 dark:border-slate-800"
                         : `border-slate-200 dark:border-slate-800 ${theme.hoverBorder} ${theme.hoverShadow}`
@@ -977,7 +977,7 @@ const Offers = () => {
                   >
                     {/* Colored top section */}
                     <div
-                      className={`relative min-h-[230px] overflow-hidden bg-gradient-to-br ${theme.gradient} p-5 text-white sm:p-6`}
+                      className={`relative min-h-[170px] overflow-hidden bg-gradient-to-br ${theme.gradient} p-4 text-white sm:min-h-[185px] sm:p-4.5`}
                     >
                       <div
                         className={`pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full border-[24px] border-white/10`}
@@ -989,34 +989,34 @@ const Offers = () => {
 
                       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.08)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.08)_50%,rgba(255,255,255,0.08)_75%,transparent_75%,transparent)] [background-size:40px_40px] opacity-20" />
 
-                      <div className="relative flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] backdrop-blur-xl">
-                          <Sparkles className="h-3.5 w-3.5" />
+                      <div className="relative flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[8px] font-black uppercase tracking-[0.14em] backdrop-blur-xl">
+                          <Sparkles className="h-3 w-3" />
                           {theme.tagLabel}
                         </div>
 
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 backdrop-blur-xl">
-                          <BadgePercent className="h-5 w-5" />
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/15 backdrop-blur-xl">
+                          <BadgePercent className="h-4 w-4" />
                         </div>
                       </div>
 
-                      <div className="relative mt-6">
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70">
+                      <div className="relative mt-4">
+                        <p className="text-[9px] font-black uppercase tracking-[0.18em] text-white/70">
                           {theme.tagLabel}
                         </p>
 
-                        <h3 className="mt-1 text-4xl font-black tracking-[-0.04em] sm:text-5xl">
+                        <h3 className="mt-1 text-2xl font-black tracking-[-0.03em] sm:text-3xl">
                           {getDiscountText(offer)}
                         </h3>
 
-                        <p className="mt-3 min-h-[48px] max-w-sm text-sm font-semibold leading-6 text-white/90">
+                        <p className="mt-2 min-h-[36px] max-w-sm text-xs font-semibold leading-5 text-white/90">
                           {getCouponTitle(offer)}
                         </p>
                       </div>
 
                       {countdown.isExpired && (
                         <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/55 backdrop-blur-[2px]">
-                          <div className="-rotate-6 rounded-2xl border-2 border-white/80 px-6 py-3 text-xl font-black uppercase tracking-[0.2em] text-white">
+                          <div className="-rotate-6 rounded-xl border-2 border-white/80 px-5 py-2.5 text-base font-black uppercase tracking-[0.18em] text-white">
                             Expired
                           </div>
                         </div>
@@ -1033,13 +1033,13 @@ const Offers = () => {
                     </div>
 
                     {/* Card body */}
-                    <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <div className="flex flex-1 flex-col p-4 sm:p-4.5">
                       {(minPurchase > 0 ||
                         maxDiscount > 0) && (
-                        <div className="mb-4 flex flex-wrap gap-2">
+                        <div className="mb-3 flex flex-wrap gap-1.5">
                           {minPurchase > 0 && (
                             <span
-                              className={`rounded-xl border px-3 py-1.5 text-[10px] font-black ${theme.softBorder} ${theme.softBg} text-slate-600 dark:text-slate-300`}
+                              className={`rounded-lg border px-2.5 py-1 text-[9px] font-black ${theme.softBorder} ${theme.softBg} text-slate-600 dark:text-slate-300`}
                             >
                               Min. booking ₹
                               {formatCurrency(minPurchase)}
@@ -1048,7 +1048,7 @@ const Offers = () => {
 
                           {maxDiscount > 0 && (
                             <span
-                              className={`rounded-xl border px-3 py-1.5 text-[10px] font-black ${theme.softBorder} ${theme.softBg} ${theme.accentText}`}
+                              className={`rounded-lg border px-2.5 py-1 text-[9px] font-black ${theme.softBorder} ${theme.softBg} ${theme.accentText}`}
                             >
                               Max. saving ₹
                               {formatCurrency(maxDiscount)}
@@ -1065,14 +1065,14 @@ const Offers = () => {
                       />
 
                       {/* Coupon code */}
-                      <div className="mt-4 overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 to-slate-800 p-1 shadow-lg shadow-slate-900/10">
-                        <div className="flex items-center justify-between gap-3 rounded-[14px] border border-white/10 bg-white/5 p-3">
+                      <div className="mt-3 overflow-hidden rounded-xl bg-gradient-to-br from-slate-950 to-slate-800 p-1 shadow-lg shadow-slate-900/10">
+                        <div className="flex items-center justify-between gap-2 rounded-[10px] border border-white/10 bg-white/5 p-2.5">
                           <div className="min-w-0">
-                            <p className="text-[9px] font-black uppercase tracking-[0.18em] text-slate-400">
+                            <p className="text-[8px] font-black uppercase tracking-[0.16em] text-slate-400">
                               Coupon code
                             </p>
 
-                            <p className="mt-1 truncate text-lg font-black uppercase tracking-[0.12em] text-white">
+                            <p className="mt-0.5 truncate text-base font-black uppercase tracking-[0.1em] text-white">
                               {couponCode || "N/A"}
                             </p>
                           </div>
@@ -1096,7 +1096,7 @@ const Offers = () => {
                                 ? "Copied"
                                 : `Copy ${couponCode}`
                             }
-                            className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl px-3 text-xs font-black transition active:scale-95 ${
+                            className={`inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg px-2.5 text-[11px] font-black transition active:scale-95 ${
                               countdown.isExpired ||
                               !couponCode
                                 ? "cursor-not-allowed bg-slate-700 text-slate-500"
@@ -1107,14 +1107,14 @@ const Offers = () => {
                           >
                             {isCopied ? (
                               <>
-                                <CheckCircle2 className="h-4 w-4" />
+                                <CheckCircle2 className="h-3.5 w-3.5" />
                                 <span className="hidden min-[370px]:inline">
                                   Copied
                                 </span>
                               </>
                             ) : (
                               <>
-                                <Copy className="h-4 w-4" />
+                                <Copy className="h-3.5 w-3.5" />
                                 <span className="hidden min-[370px]:inline">
                                   Copy
                                 </span>
@@ -1125,13 +1125,13 @@ const Offers = () => {
                       </div>
 
                       {/* Trust footer */}
-                      <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-3 dark:border-slate-800">
-                        <span className="inline-flex items-center gap-1.5 text-[8px] font-bold text-slate-400 dark:text-slate-500">
-                          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                      <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-2.5 dark:border-slate-800">
+                        <span className="inline-flex items-center gap-1 text-[7px] font-bold text-slate-400 dark:text-slate-500">
+                          <ShieldCheck className="h-3 w-3 text-emerald-500" />
                           Verified TedBus offer
                         </span>
 
-                        <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-wider">
+                        <span className="inline-flex items-center gap-1 text-[7px] font-black uppercase tracking-wider">
                           <span
                             className={`h-1.5 w-1.5 rounded-full ${theme.dotColor}`}
                           />
@@ -1149,7 +1149,7 @@ const Offers = () => {
 
             {/* Dots */}
             {offers.length > 1 && (
-              <div className="mt-1 flex flex-col items-center justify-center gap-3">
+              <div className="mt-1 flex flex-col items-center justify-center gap-2.5">
                 <div className="flex items-center gap-1.5">
                   {offers.map((offer, index) => {
                     const theme = getTheme(index);
@@ -1165,17 +1165,17 @@ const Offers = () => {
                         type="button"
                         onClick={() => scrollToOffer(index)}
                         aria-label={`Go to offer ${index + 1}`}
-                        className={`h-2 rounded-full transition-all duration-300 ${
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
                           currentOfferIndex === index
-                            ? `w-7 bg-gradient-to-r ${theme.gradient}`
-                            : "w-2 bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600"
+                            ? `w-6 bg-gradient-to-r ${theme.gradient}`
+                            : "w-1.5 bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600"
                         }`}
                       />
                     );
                   })}
                 </div>
 
-                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 sm:hidden">
+                <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 sm:hidden">
                   Swipe to explore more offers
                 </p>
               </div>
