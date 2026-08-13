@@ -4,6 +4,13 @@ const toggleLike = async (req, res, next) => {
   try {
     const { postId, commentId } = req.body;
 
+    if (!postId && !commentId) {
+      return res.status(400).json({
+        success: false,
+        message: "postId or commentId is required",
+      });
+    }
+
     const result = await likeService.toggleLike({
       userId: req.user._id,
       postId,
@@ -13,9 +20,17 @@ const toggleLike = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: result.liked ? "Liked successfully" : "Unliked successfully",
-      ...result,
+      liked: result.liked,
     });
   } catch (error) {
+    // Duplicate key error (MongoDB Error Code 11000)
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already liked this",
+      });
+    }
+
     next(error);
   }
 };
