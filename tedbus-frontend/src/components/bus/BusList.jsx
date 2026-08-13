@@ -22,15 +22,16 @@ const BusList = ({ buses = [], journeyDate }) => {
 
   return (
     <div className="space-y-5">
-      {buses.map((bus , index) => {
-      
-  // const busId = bus._id || bus.id;
-        return   <BusCard
-    key={bus._id || bus.id || index}
-    bus={bus}
-    journeyDate={journeyDate}
-    index={index}      
-  />;
+      {buses.map((bus, index) => {
+        // const busId = bus._id || bus.id;
+        return (
+          <BusCard
+            key={bus._id || bus.id || index}
+            bus={bus}
+            journeyDate={journeyDate}
+            index={index}
+          />
+        );
       })}
     </div>
   );

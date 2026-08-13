@@ -29,10 +29,7 @@ import NotificationBell from "../../notifications/NotificationBell";
 import GoogleTranslate from "./GoogleTranslate";
 import ThemeToggle from "./ThemeToggle";
 
-/*
- * Each nav link gets a unique premium color theme.
- * Hover, active background, active text, indicator glow — all themed.
- */
+
 const NAV_THEMES = [
   {
     // Home

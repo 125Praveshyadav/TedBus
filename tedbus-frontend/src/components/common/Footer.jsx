@@ -29,31 +29,21 @@ const Footer = () => {
     { label: "Terms of Service", to: "/terms" },
   ];
 
-  // const socialLinks = [
-  //   { icon: Facebook, href: "#", label: "Facebook" },
-  //   { icon: Twitter, href: "#", label: "Twitter" },
-  //   { icon: Instagram, href: "#", label: "Instagram" },
-  //   { icon: Youtube, href: "#", label: "YouTube" },
-  // ];
-
   return (
     <footer className="relative isolate overflow-hidden bg-slate-950 pt-16 transition-colors duration-300 dark:bg-[#050A15] sm:pt-20 lg:pt-24">
-      {/* Premium Background Effects */}
+     
       <div className="pointer-events-none absolute -left-40 top-0 h-96 w-96 rounded-full bg-red-600/10 blur-[128px] dark:bg-red-600/10" />
       <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-orange-500/10 blur-[128px] dark:bg-orange-500/10" />
       
-      {/* Subtle Grid Pattern */}
+     
       <div className="pointer-events-none absolute inset-0 opacity-20 dark:opacity-30">
         <div className="h-full w-full bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_1px,_transparent_1px)] [background-size:24px_24px]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Top Section: Newsletter & Trust */}
-      
-
-        {/* Main Grid */}
+     
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-          {/* Brand Column */}
+        
           <div className="sm:col-span-2 lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-orange-500 text-white shadow-lg shadow-red-500/20">
@@ -76,22 +66,6 @@ const Footer = () => {
               )}
             </p>
 
-            {/* Social Links
-            <div className="mt-6 flex items-center gap-3">
-              {socialLinks.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    aria-label={social.label}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:-translate-y-1 hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
-                  >
-                    <Icon className="h-4 w-4" />
-                  </a>
-                );
-              })}
-            </div> */}
           </div>
 
           {/* Quick Links */}
@@ -114,7 +88,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support Links */}
+        
           <div className="lg:col-span-2">
             <h4 className="mb-5 text-xs font-black uppercase tracking-wider text-white">
               {t("footer.support", "Support")}
@@ -134,7 +108,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
+         
           <div className="sm:col-span-2 lg:col-span-3">
             <h4 className="mb-5 text-xs font-black uppercase tracking-wider text-white">
               {t("footer.contactUs", "Contact Us")}
@@ -172,7 +146,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="relative mt-16 border-t border-white/10 bg-black/20">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6 lg:px-8">
           <p className="text-xs font-semibold text-slate-500">

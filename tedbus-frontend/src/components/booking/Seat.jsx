@@ -137,9 +137,7 @@ const Seat = ({
       />
 
       {/* Seat number */}
-      <span className="relative z-10 mt-0.5">
-        {seatNumber}
-      </span>
+      <span className="relative z-10 mt-0.5">{seatNumber}</span>
 
       {/* Selected icon */}
       {isSelected && (

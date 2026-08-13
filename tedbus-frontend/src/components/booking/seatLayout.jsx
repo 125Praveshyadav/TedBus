@@ -64,57 +64,34 @@ const SeatLayout = ({
 
   const parsedSeatFare = Number(seatFare) || 0;
 
-  const selectionLimit = Math.min(
-    maxSelectableSeats,
-    parsedTotalSeats,
-  );
+  const selectionLimit = Math.min(maxSelectableSeats, parsedTotalSeats);
 
-  /*
-   * Dynamic seat rows:
-   *
-   * 1A 1B | aisle | 1C 1D
-   * 2A 2B | aisle | 2C 2D
-   *
-   * Example:
-   * totalSeats = 48 => 12 rows
-   * totalSeats = 40 => 10 rows
-   * totalSeats = 50 => 13 rows, last row has 13A and 13B
-   */
+
   const seatRows = useMemo(() => {
     if (parsedTotalSeats <= 0) {
       return [];
     }
 
-    const numberOfRows = Math.ceil(
-      parsedTotalSeats / SEATS_PER_ROW,
-    );
+    const numberOfRows = Math.ceil(parsedTotalSeats / SEATS_PER_ROW);
 
-    return Array.from(
-      { length: numberOfRows },
-      (_, rowIndex) => {
-        const rowNumber = rowIndex + 1;
+    return Array.from({ length: numberOfRows }, (_, rowIndex) => {
+      const rowNumber = rowIndex + 1;
 
-        return SEAT_COLUMNS.map(
-          (columnLetter, columnIndex) => {
-            const seatIndex =
-              rowIndex * SEATS_PER_ROW + columnIndex;
+      return SEAT_COLUMNS.map((columnLetter, columnIndex) => {
+        const seatIndex = rowIndex * SEATS_PER_ROW + columnIndex;
 
-            if (seatIndex >= parsedTotalSeats) {
-              return null;
-            }
+        if (seatIndex >= parsedTotalSeats) {
+          return null;
+        }
 
-            return `${rowNumber}${columnLetter}`;
-          },
-        );
-      },
-    );
+        return `${rowNumber}${columnLetter}`;
+      });
+    });
   }, [parsedTotalSeats]);
 
   const validSeatSet = useMemo(() => {
     return new Set(
-      seatRows.flatMap((row) =>
-        row.filter(Boolean).map(normalizeSeatValue),
-      ),
+      seatRows.flatMap((row) => row.filter(Boolean).map(normalizeSeatValue)),
     );
   }, [seatRows]);
 
@@ -122,9 +99,7 @@ const SeatLayout = ({
     return new Set(
       selectedSeats
         .map(normalizeSeatValue)
-        .filter((seatNumber) =>
-          validSeatSet.has(seatNumber),
-        ),
+        .filter((seatNumber) => validSeatSet.has(seatNumber)),
     );
   }, [selectedSeats, validSeatSet]);
 
@@ -132,9 +107,7 @@ const SeatLayout = ({
     return new Set(
       bookedSeats
         .map(normalizeSeatValue)
-        .filter((seatNumber) =>
-          validSeatSet.has(seatNumber),
-        ),
+        .filter((seatNumber) => validSeatSet.has(seatNumber)),
     );
   }, [bookedSeats, validSeatSet]);
 
@@ -154,19 +127,14 @@ const SeatLayout = ({
 
   const bookedSeatCount = bookedSeatSet.size;
 
-  const availableSeatCount = Math.max(
-    parsedTotalSeats - bookedSeatCount,
-    0,
-  );
+  const availableSeatCount = Math.max(parsedTotalSeats - bookedSeatCount, 0);
 
-  const totalSeatAmount =
-    validSelectedSeats.length * parsedSeatFare;
+  const totalSeatAmount = validSelectedSeats.length * parsedSeatFare;
 
   const handleSelectSeat = (seatNumber) => {
     setError("");
 
-    const normalizedSeatNumber =
-      normalizeSeatValue(seatNumber);
+    const normalizedSeatNumber = normalizeSeatValue(seatNumber);
 
     if (
       !normalizedSeatNumber ||
@@ -179,9 +147,7 @@ const SeatLayout = ({
     if (selectedSeatSet.has(normalizedSeatNumber)) {
       setSelectedSeats((currentSeats) =>
         currentSeats.filter(
-          (seat) =>
-            normalizeSeatValue(seat) !==
-            normalizedSeatNumber,
+          (seat) => normalizeSeatValue(seat) !== normalizedSeatNumber,
         ),
       );
 
@@ -189,30 +155,22 @@ const SeatLayout = ({
     }
 
     if (validSelectedSeats.length >= selectionLimit) {
-      setError(
-        `You can select maximum ${selectionLimit} seats at a time.`,
-      );
+      setError(`You can select maximum ${selectionLimit} seats at a time.`);
 
       return;
     }
 
-    setSelectedSeats((currentSeats) => [
-      ...currentSeats,
-      normalizedSeatNumber,
-    ]);
+    setSelectedSeats((currentSeats) => [...currentSeats, normalizedSeatNumber]);
   };
 
   const removeSeat = (seatNumber) => {
-    const normalizedSeatNumber =
-      normalizeSeatValue(seatNumber);
+    const normalizedSeatNumber = normalizeSeatValue(seatNumber);
 
     setError("");
 
     setSelectedSeats((currentSeats) =>
       currentSeats.filter(
-        (seat) =>
-          normalizeSeatValue(seat) !==
-          normalizedSeatNumber,
+        (seat) => normalizeSeatValue(seat) !== normalizedSeatNumber,
       ),
     );
   };
@@ -254,8 +212,8 @@ const SeatLayout = ({
           </h2>
 
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
-            This bus does not have a valid total seat count.
-            Please update the bus capacity from the admin panel.
+            This bus does not have a valid total seat count. Please update the
+            bus capacity from the admin panel.
           </p>
         </div>
       </div>
@@ -466,15 +424,9 @@ const SeatLayout = ({
                     >
                       {/* Left seats A and B */}
                       <div className="flex justify-end gap-2">
-                        {renderSeat(
-                          row[0],
-                          `${rowNumber}-A`,
-                        )}
+                        {renderSeat(row[0], `${rowNumber}-A`)}
 
-                        {renderSeat(
-                          row[1],
-                          `${rowNumber}-B`,
-                        )}
+                        {renderSeat(row[1], `${rowNumber}-B`)}
                       </div>
 
                       {/* Aisle row number */}
@@ -486,15 +438,9 @@ const SeatLayout = ({
 
                       {/* Right seats C and D */}
                       <div className="flex justify-start gap-2">
-                        {renderSeat(
-                          row[2],
-                          `${rowNumber}-C`,
-                        )}
+                        {renderSeat(row[2], `${rowNumber}-C`)}
 
-                        {renderSeat(
-                          row[3],
-                          `${rowNumber}-D`,
-                        )}
+                        {renderSeat(row[3], `${rowNumber}-D`)}
                       </div>
                     </div>
                   );
@@ -522,7 +468,6 @@ const SeatLayout = ({
               <h3 className="flex items-center gap-2 text-base font-black text-slate-900 dark:text-white">
                 <Armchair className="h-5 w-5 text-red-600 dark:text-red-400" />
                 Selected Seats
-
                 <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-600 dark:bg-red-950/50 dark:text-red-400">
                   {validSelectedSeats.length}
                 </span>
@@ -589,17 +534,16 @@ const SeatLayout = ({
         </div>
 
         {/* Selection limit */}
-        {validSelectedSeats.length >= selectionLimit &&
-          selectionLimit > 0 && (
-            <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3.5 text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
-              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" />
+        {validSelectedSeats.length >= selectionLimit && selectionLimit > 0 && (
+          <div className="mt-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3.5 text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
+            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" />
 
-              <p className="text-sm font-bold">
-                You have reached the maximum limit of{" "}
-                {selectionLimit} seats for one booking.
-              </p>
-            </div>
-          )}
+            <p className="text-sm font-bold">
+              You have reached the maximum limit of {selectionLimit} seats for
+              one booking.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

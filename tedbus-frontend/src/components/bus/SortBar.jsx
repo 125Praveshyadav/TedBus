@@ -37,7 +37,8 @@ const SORT_OPTIONS = [
 const getSortTheme = (sortValue) => {
   if (sortValue === "price-low") {
     return {
-      badge: "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50",
+      badge:
+        "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50",
       icon: "text-emerald-600 dark:text-emerald-400",
       selectFocus: "focus:border-emerald-500 focus:ring-emerald-500/10",
     };
@@ -45,7 +46,8 @@ const getSortTheme = (sortValue) => {
 
   if (sortValue === "price-high") {
     return {
-      badge: "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50",
+      badge:
+        "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50",
       icon: "text-rose-600 dark:text-rose-400",
       selectFocus: "focus:border-rose-500 focus:ring-rose-500/10",
     };
@@ -53,7 +55,8 @@ const getSortTheme = (sortValue) => {
 
   if (sortValue === "rating-high") {
     return {
-      badge: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50",
+      badge:
+        "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50",
       icon: "text-amber-600 dark:text-amber-400",
       selectFocus: "focus:border-amber-500 focus:ring-amber-500/10",
     };
@@ -61,7 +64,8 @@ const getSortTheme = (sortValue) => {
 
   if (sortValue === "seats-high") {
     return {
-      badge: "bg-cyan-50 text-cyan-700 border-cyan-100 dark:bg-cyan-950/30 dark:text-cyan-400 dark:border-cyan-900/50",
+      badge:
+        "bg-cyan-50 text-cyan-700 border-cyan-100 dark:bg-cyan-950/30 dark:text-cyan-400 dark:border-cyan-900/50",
       icon: "text-cyan-600 dark:text-cyan-400",
       selectFocus: "focus:border-cyan-500 focus:ring-cyan-500/10",
     };
@@ -69,14 +73,16 @@ const getSortTheme = (sortValue) => {
 
   if (sortValue === "departure-early") {
     return {
-      badge: "bg-violet-50 text-violet-700 border-violet-100 dark:bg-violet-950/30 dark:text-violet-400 dark:border-violet-900/50",
+      badge:
+        "bg-violet-50 text-violet-700 border-violet-100 dark:bg-violet-950/30 dark:text-violet-400 dark:border-violet-900/50",
       icon: "text-violet-600 dark:text-violet-400",
       selectFocus: "focus:border-violet-500 focus:ring-violet-500/10",
     };
   }
 
   return {
-    badge: "bg-red-50 text-red-700 border-red-100 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900/50",
+    badge:
+      "bg-red-50 text-red-700 border-red-100 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900/50",
     icon: "text-red-600 dark:text-red-400",
     selectFocus: "focus:border-red-500 focus:ring-red-500/10",
   };
@@ -94,8 +100,7 @@ const SortBar = ({
 
   const selectedOption = useMemo(() => {
     return (
-      SORT_OPTIONS.find((option) => option.value === sortBy) ||
-      SORT_OPTIONS[0]
+      SORT_OPTIONS.find((option) => option.value === sortBy) || SORT_OPTIONS[0]
     );
   }, [sortBy]);
 
@@ -143,7 +148,9 @@ const SortBar = ({
 
           {/* Sort select */}
           <div className="flex w-full items-center gap-3 sm:w-auto">
-            <label className={`hidden items-center gap-2 text-sm font-black sm:flex ${theme.icon}`}>
+            <label
+              className={`hidden items-center gap-2 text-sm font-black sm:flex ${theme.icon}`}
+            >
               <TrendingUp className="h-4 w-4" />
               Sort by
             </label>

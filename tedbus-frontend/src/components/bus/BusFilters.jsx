@@ -85,10 +85,7 @@ export const getActiveFilterCount = (
     (filters.arrivalTime?.length || 0) +
     (filters.amenities?.length || 0) +
     (filters.rating ? 1 : 0) +
-    (Number(filters.priceRange?.[1] ?? maxPrice) <
-    Number(maxPrice)
-      ? 1
-      : 0)
+    (Number(filters.priceRange?.[1] ?? maxPrice) < Number(maxPrice) ? 1 : 0)
   );
 };
 
@@ -127,13 +124,7 @@ const FilterSection = ({
   );
 };
 
-const FilterOption = ({
-  label,
-  active,
-  onClick,
-  activeClass,
-  icon: Icon,
-}) => {
+const FilterOption = ({ label, active, onClick, activeClass, icon: Icon }) => {
   return (
     <button
       type="button"
@@ -149,9 +140,7 @@ const FilterOption = ({
         {Icon && (
           <Icon
             className={`h-3.5 w-3.5 shrink-0 ${
-              active
-                ? "text-current"
-                : "text-slate-400 dark:text-slate-500"
+              active ? "text-current" : "text-slate-400 dark:text-slate-500"
             }`}
           />
         )}
@@ -203,49 +192,37 @@ const BusFilters = ({
       ...current,
       priceRange: [
         0,
-        Math.min(
-          Number(current.priceRange?.[1] ?? maxPrice),
-          Number(maxPrice),
-        ),
+        Math.min(Number(current.priceRange?.[1] ?? maxPrice), Number(maxPrice)),
       ],
     }));
   }, [maxPrice, controlledFilters]);
 
   const availableBusTypes = useMemo(() => {
-    return busTypes.length > 0
-      ? busTypes
-      : DEFAULT_BUS_TYPES;
+    return busTypes.length > 0 ? busTypes : DEFAULT_BUS_TYPES;
   }, [busTypes]);
 
   const baseFilters = controlledFilters ?? localFilters;
 
   const filters = {
     ...baseFilters,
-    busType:
-      selectedBusTypes ?? baseFilters.busType ?? [],
+    busType: selectedBusTypes ?? baseFilters.busType ?? [],
     departureTime: baseFilters.departureTime ?? [],
     arrivalTime: baseFilters.arrivalTime ?? [],
     amenities: baseFilters.amenities ?? [],
-    priceRange:
-      baseFilters.priceRange ?? [0, maxPrice],
+    priceRange: baseFilters.priceRange ?? [0, maxPrice],
     rating: Number(baseFilters.rating || 0),
   };
 
-  const activeFilterCount = getActiveFilterCount(
-    filters,
-    maxPrice,
-  );
+  const activeFilterCount = getActiveFilterCount(filters, maxPrice);
 
   const updateFilters = (nextFilters) => {
     const normalizedFilters = {
       ...nextFilters,
       busType: nextFilters.busType ?? [],
-      departureTime:
-        nextFilters.departureTime ?? [],
+      departureTime: nextFilters.departureTime ?? [],
       arrivalTime: nextFilters.arrivalTime ?? [],
       amenities: nextFilters.amenities ?? [],
-      priceRange:
-        nextFilters.priceRange ?? [0, maxPrice],
+      priceRange: nextFilters.priceRange ?? [0, maxPrice],
       rating: Number(nextFilters.rating || 0),
     };
 
@@ -255,9 +232,7 @@ const BusFilters = ({
       setLocalFilters(normalizedFilters);
     }
 
-    setSelectedBusTypes?.(
-      normalizedFilters.busType,
-    );
+    setSelectedBusTypes?.(normalizedFilters.busType);
 
     onFilterChange?.(normalizedFilters);
   };
@@ -265,20 +240,14 @@ const BusFilters = ({
   const handleToggle = (field, value) => {
     updateFilters({
       ...filters,
-      [field]: toggleValue(
-        filters[field],
-        value,
-      ),
+      [field]: toggleValue(filters[field], value),
     });
   };
 
   const handleRatingChange = (rating) => {
     updateFilters({
       ...filters,
-      rating:
-        Number(filters.rating) === Number(rating)
-          ? 0
-          : Number(rating),
+      rating: Number(filters.rating) === Number(rating) ? 0 : Number(rating),
     });
   };
 
@@ -296,9 +265,7 @@ const BusFilters = ({
     });
   };
 
-  const selectedMaxPrice = Number(
-    filters.priceRange?.[1] ?? maxPrice,
-  );
+  const selectedMaxPrice = Number(filters.priceRange?.[1] ?? maxPrice);
 
   return (
     <div
@@ -322,9 +289,7 @@ const BusFilters = ({
 
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-black">
-                  Smart Filters
-                </h3>
+                <h3 className="text-sm font-black">Smart Filters</h3>
 
                 {activeFilterCount > 0 && (
                   <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-1.5 text-[9px] font-black text-white">
@@ -368,9 +333,7 @@ const BusFilters = ({
                 key={type}
                 label={type}
                 active={filters.busType.includes(type)}
-                onClick={() =>
-                  handleToggle("busType", type)
-                }
+                onClick={() => handleToggle("busType", type)}
                 activeClass="border-violet-500 bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-500/20"
               />
             ))}
@@ -390,15 +353,8 @@ const BusFilters = ({
               <FilterOption
                 key={slot.value}
                 label={slot.label}
-                active={filters.departureTime.includes(
-                  slot.value,
-                )}
-                onClick={() =>
-                  handleToggle(
-                    "departureTime",
-                    slot.value,
-                  )
-                }
+                active={filters.departureTime.includes(slot.value)}
+                onClick={() => handleToggle("departureTime", slot.value)}
                 activeClass="border-cyan-500 bg-gradient-to-r from-cyan-600 to-blue-500 text-white shadow-md shadow-cyan-500/20"
               />
             ))}
@@ -418,15 +374,8 @@ const BusFilters = ({
               <FilterOption
                 key={slot.value}
                 label={slot.label}
-                active={filters.arrivalTime.includes(
-                  slot.value,
-                )}
-                onClick={() =>
-                  handleToggle(
-                    "arrivalTime",
-                    slot.value,
-                  )
-                }
+                active={filters.arrivalTime.includes(slot.value)}
+                onClick={() => handleToggle("arrivalTime", slot.value)}
                 activeClass="border-teal-500 bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-md shadow-teal-500/20"
               />
             ))}
@@ -458,9 +407,7 @@ const BusFilters = ({
               max={maxPrice}
               step={50}
               value={selectedMaxPrice}
-              onChange={(event) =>
-                handlePriceChange(event.target.value)
-              }
+              onChange={(event) => handlePriceChange(event.target.value)}
               aria-label="Maximum price"
               className="w-full cursor-pointer accent-amber-500"
             />
@@ -486,15 +433,8 @@ const BusFilters = ({
                 key={amenity.value}
                 label={amenity.label}
                 icon={amenity.icon}
-                active={filters.amenities.includes(
-                  amenity.value,
-                )}
-                onClick={() =>
-                  handleToggle(
-                    "amenities",
-                    amenity.value,
-                  )
-                }
+                active={filters.amenities.includes(amenity.value)}
+                onClick={() => handleToggle("amenities", amenity.value)}
                 activeClass="border-indigo-500 bg-gradient-to-r from-indigo-600 to-blue-500 text-white shadow-md shadow-indigo-500/20"
               />
             ))}
@@ -511,17 +451,13 @@ const BusFilters = ({
         >
           <div className="grid grid-cols-2 gap-2">
             {RATING_OPTIONS.map((rating) => {
-              const active =
-                Number(filters.rating) ===
-                Number(rating);
+              const active = Number(filters.rating) === Number(rating);
 
               return (
                 <button
                   key={rating}
                   type="button"
-                  onClick={() =>
-                    handleRatingChange(rating)
-                  }
+                  onClick={() => handleRatingChange(rating)}
                   aria-pressed={active}
                   className={`flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2.5 text-[11px] font-black transition-all active:scale-[0.98] ${
                     active
@@ -536,7 +472,6 @@ const BusFilters = ({
                         : "fill-amber-400 text-amber-400"
                     }`}
                   />
-
                   {rating}+
                 </button>
               );
@@ -548,9 +483,7 @@ const BusFilters = ({
       {/* Sticky footer */}
       <div className="shrink-0 border-t border-slate-200 bg-white p-3.5 dark:border-slate-800 dark:bg-slate-900">
         <div
-          className={`grid gap-2 ${
-            isMobile ? "grid-cols-2" : "grid-cols-1"
-          }`}
+          className={`grid gap-2 ${isMobile ? "grid-cols-2" : "grid-cols-1"}`}
         >
           <button
             type="button"
@@ -568,8 +501,7 @@ const BusFilters = ({
               onClick={onClose}
               className="rounded-xl bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-900 px-4 py-3 text-xs font-black text-white shadow-lg shadow-indigo-500/20 transition active:scale-[0.98]"
             >
-              Show {resultCount}{" "}
-              {resultCount === 1 ? "Bus" : "Buses"}
+              Show {resultCount} {resultCount === 1 ? "Bus" : "Buses"}
             </button>
           )}
         </div>

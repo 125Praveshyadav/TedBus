@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Check,
-  ChevronDown,
-  Globe,
-  Languages,
-  Loader2,
-} from "lucide-react";
+import { Check, ChevronDown, Globe, Languages, Loader2 } from "lucide-react";
 
 const languages = [
   { code: "en", name: "English", nativeName: "English", flag: "🇺🇸" },
@@ -26,7 +20,6 @@ const GoogleTranslate = () => {
   useEffect(() => {
     const addScript = () => {
       if (document.getElementById("google_translate_script")) {
-        // Script already loaded — check if combo exists
         if (document.querySelector(".goog-te-combo")) {
           setReady(true);
         }
@@ -43,7 +36,6 @@ const GoogleTranslate = () => {
           "google_translate_element",
         );
 
-        // Wait a tick for combo to appear
         const checkCombo = setInterval(() => {
           if (document.querySelector(".goog-te-combo")) {
             setReady(true);
@@ -66,10 +58,7 @@ const GoogleTranslate = () => {
     addScript();
 
     const handleClickOutside = (e) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
     };
@@ -82,10 +71,7 @@ const GoogleTranslate = () => {
     document.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside,
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
   }, []);
@@ -94,10 +80,8 @@ const GoogleTranslate = () => {
     const select = document.querySelector(".goog-te-combo");
 
     if (!select) {
-      // Retry after short delay if Google widget not ready
       setTimeout(() => {
-        const retrySelect =
-          document.querySelector(".goog-te-combo");
+        const retrySelect = document.querySelector(".goog-te-combo");
         if (retrySelect) {
           retrySelect.value = lang.code;
           retrySelect.dispatchEvent(new Event("change"));
@@ -116,14 +100,12 @@ const GoogleTranslate = () => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Hidden Google widget */}
       <div
         id="google_translate_element"
         className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0"
         aria-hidden="true"
       />
 
-      {/* Trigger button */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -149,15 +131,11 @@ const GoogleTranslate = () => {
           )}
         </div>
 
-        {/* Desktop: language name */}
         <span className="hidden max-w-[72px] truncate text-xs font-black text-slate-700 dark:text-slate-300 sm:inline">
           {selectedLang.name}
         </span>
 
-        {/* Mobile: flag */}
-        <span className="text-sm sm:hidden">
-          {selectedLang.flag}
-        </span>
+        <span className="text-sm sm:hidden">{selectedLang.flag}</span>
 
         <ChevronDown
           className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-300 dark:text-slate-500 ${
@@ -185,9 +163,7 @@ const GoogleTranslate = () => {
                 </div>
 
                 <div>
-                  <p className="text-xs font-black">
-                    Translate Page
-                  </p>
+                  <p className="text-xs font-black">Translate Page</p>
                   <p className="text-[9px] font-bold text-sky-100/80">
                     Powered by Google
                   </p>
@@ -199,8 +175,7 @@ const GoogleTranslate = () => {
           {/* Language list */}
           <div className="max-h-64 space-y-0.5 overflow-y-auto p-2 [scrollbar-width:thin] [scrollbar-color:rgba(148,163,184,0.4)_transparent]">
             {languages.map((lng) => {
-              const isActive =
-                selectedLang.code === lng.code;
+              const isActive = selectedLang.code === lng.code;
 
               return (
                 <button
@@ -245,10 +220,7 @@ const GoogleTranslate = () => {
 
                   {isActive && (
                     <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-sm shadow-sky-500/30">
-                      <Check
-                        className="h-3 w-3"
-                        strokeWidth={3}
-                      />
+                      <Check className="h-3 w-3" strokeWidth={3} />
                     </span>
                   )}
                 </button>
@@ -259,8 +231,7 @@ const GoogleTranslate = () => {
           {/* Footer */}
           <div className="border-t border-slate-100 px-3 py-2 dark:border-slate-800">
             <p className="text-center text-[9px] font-bold text-slate-400 dark:text-slate-500">
-              {selectedLang.flag}{" "}
-              {selectedLang.nativeName} selected
+              {selectedLang.flag} {selectedLang.nativeName} selected
             </p>
           </div>
         </div>
