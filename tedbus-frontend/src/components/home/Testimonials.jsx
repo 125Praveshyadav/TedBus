@@ -40,7 +40,7 @@ const testimonials = [
     name: "Saumya Singh",
     role: "Student",
     location: "Lucknow",
-    initial: "P",
+    initial: "S",
     rating: 5,
     review:
       "As a student on a budget, TedBus always shows the most affordable options. The seat selection feature is super smooth and I love the instant e-ticket confirmation.",
@@ -58,7 +58,7 @@ const testimonials = [
     name: "Pravesh Yadav",
     role: "Freelancer",
     location: "Pune",
-    initial: "A",
+    initial: "P",
     rating: 5,
     review:
       "Best bus booking platform I have ever used. The customer support team helped me reschedule my trip at midnight. They genuinely care about their travellers.",
@@ -76,7 +76,7 @@ const testimonials = [
     name: "Vijay Patel",
     role: "Marketing Manager",
     location: "Ahmedabad",
-    initial: "S",
+    initial: "V",
     rating: 5,
     review:
       "I travel Ahmedabad to Surat every week and TedBus has never disappointed me. The app is clean, payments are secure, and buses always depart on time.",
@@ -91,10 +91,10 @@ const testimonials = [
   },
   {
     id: 5,
-    name: "Vikram Reddy",
+    name: "Rocky Bhai",
     role: "Software Engineer",
     location: "Bangalore",
-    initial: "V",
+    initial: "R",
     rating: 5,
     review:
       "From Bangalore to Hyderabad overnight — I just book on TedBus, sleep comfortably, and arrive fresh. The seat layout view helps me pick the perfect window seat every time.",
@@ -112,7 +112,7 @@ const testimonials = [
     name: "Sanjana Yadav",
     role: "Travel Blogger",
     location: "Mumbai",
-    initial: "A",
+    initial: "S",
     rating: 5,
     review:
       "I have tried many bus apps, but TedBus is on another level. The UI is beautiful, filters are helpful, and I found coupon codes that saved me hundreds on my Goa trip.",
@@ -145,10 +145,10 @@ const testimonials = [
   },
   {
     id: 8,
-    name: "Divya Nair",
+    name: "Akshit Yadav",
     role: "Doctor",
     location: "Chennai",
-    initial: "D",
+    initial: "A",
     rating: 5,
     review:
       "After a long hospital shift, I need a stress-free way to book my travel. TedBus lets me book in under a minute. The confirmed ticket arrives instantly — no calls, no waiting.",
