@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="./screenshots/home.png" alt="TedBus Home Page" width="900"/>
+</p>
 <div align="center">
 
 # 🚌 TEDBUS
