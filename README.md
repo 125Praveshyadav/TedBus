@@ -279,7 +279,7 @@ i18next-browser-languagedetector
 ## 🏠 Home Page
 
 <p align="center">
-  <img src="./screenshots/home.png" width="850"/>
+  <img src="./screenshots/home.png" width="450"/>
 </p>
 
 ---
@@ -287,7 +287,7 @@ i18next-browser-languagedetector
 ## 🔎 Search Buses
 
 <p align="center">
-  <img src="./screenshots/search-bus.png" width="850"/>
+  <img src="./screenshots/search-bus.png" width="450"/>
 </p>
 
 ---
@@ -295,7 +295,7 @@ i18next-browser-languagedetector
 ## 🚌 Bus Details
 
 <p align="center">
-  <img src="./screenshots/but-details.png" width="850"/>
+  <img src="./screenshots/but-details.png" width="450"/>
 </p>
 
 ---
@@ -303,7 +303,7 @@ i18next-browser-languagedetector
 ## 💺 Seat Selection
 
 <p align="center">
-  <img src="./screenshots/seat-selection.png" width="850"/>
+  <img src="./screenshots/seat-selection.png" width="450"/>
 </p>
 
 ---
@@ -311,7 +311,7 @@ i18next-browser-languagedetector
 ## 🎫 Booking
 
 <p align="center">
-  <img src="./screenshots/Booking.png" width="850"/>
+  <img src="./screenshots/Booking.png" width="450"/>
 </p>
 
 ---
@@ -319,7 +319,7 @@ i18next-browser-languagedetector
 ## 💳 Payment
 
 <p align="center">
-  <img src="./screenshots/Payment.png" width="850"/>
+  <img src="./screenshots/Payment.png" width="450"/>
 </p>
 
 ---
@@ -327,7 +327,7 @@ i18next-browser-languagedetector
 ## 🔔 Notifications
 
 <p align="center">
-  <img src="./screenshots/Notification.png" width="850"/>
+  <img src="./screenshots/Notification.png" width="450"/>
 </p>
 
 ---
@@ -335,7 +335,7 @@ i18next-browser-languagedetector
 ## 🎁 Offers
 
 <p align="center">
-  <img src="./screenshots/Offer.png" width="850"/>
+  <img src="./screenshots/Offer.png" width="450"/>
 </p>
 
 ---
@@ -343,7 +343,7 @@ i18next-browser-languagedetector
 ## 🗺️ Route Planner
 
 <p align="center">
-  <img src="./screenshots/RoutePlanner.png" width="850"/>
+  <img src="./screenshots/RoutePlanner.png" width="450"/>
 </p>
 
 ---
@@ -351,7 +351,7 @@ i18next-browser-languagedetector
 ## 👥 Community
 
 <p align="center">
-  <img src="./screenshots/community.png" width="850"/>
+  <img src="./screenshots/community.png" width="450"/>
 </p>
 
 ---
@@ -359,7 +359,7 @@ i18next-browser-languagedetector
 ## 🛠️ Admin Dashboard
 
 <p align="center">
-  <img src="./screenshots/admin-Dashboard.png" width="850"/>
+  <img src="./screenshots/admin-Dashboard.png" width="450"/>
 </p>
 
 # 🧰 Tech Stack
