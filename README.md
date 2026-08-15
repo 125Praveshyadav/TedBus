@@ -274,6 +274,93 @@ i18next-browser-languagedetector
 ```
 
 ---
+# 🖼️ Application Preview
+
+## 🏠 Home Page
+
+<p align="center">
+  <img src="./screenshots/home.png" width="850"/>
+</p>
+
+---
+
+## 🔎 Search Buses
+
+<p align="center">
+  <img src="./screenshots/search-bus.png" width="850"/>
+</p>
+
+---
+
+## 🚌 Bus Details
+
+<p align="center">
+  <img src="./screenshots/but-details.png" width="850"/>
+</p>
+
+---
+
+## 💺 Seat Selection
+
+<p align="center">
+  <img src="./screenshots/seat-selection.png" width="850"/>
+</p>
+
+---
+
+## 🎫 Booking
+
+<p align="center">
+  <img src="./screenshots/Booking.png" width="850"/>
+</p>
+
+---
+
+## 💳 Payment
+
+<p align="center">
+  <img src="./screenshots/Payment.png" width="850"/>
+</p>
+
+---
+
+## 🔔 Notifications
+
+<p align="center">
+  <img src="./screenshots/Notification.png" width="850"/>
+</p>
+
+---
+
+## 🎁 Offers
+
+<p align="center">
+  <img src="./screenshots/Offer.png" width="850"/>
+</p>
+
+---
+
+## 🗺️ Route Planner
+
+<p align="center">
+  <img src="./screenshots/RoutePlanner.png" width="850"/>
+</p>
+
+---
+
+## 👥 Community
+
+<p align="center">
+  <img src="./screenshots/community.png" width="850"/>
+</p>
+
+---
+
+## 🛠️ Admin Dashboard
+
+<p align="center">
+  <img src="./screenshots/admin-Dashboard.png" width="850"/>
+</p>
 
 # 🧰 Tech Stack
 
@@ -714,4 +801,4 @@ It really helps and motivates me to keep improving the project.
 
 ⭐ **Star the repository if you found it useful!** ⭐
 
-</div>
+</div>                  
