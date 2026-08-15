@@ -321,38 +321,39 @@ i18next-browser-languagedetector
 
 # 🏗️ System Architecture
 
-```text
-                         ┌──────────────────────┐
-                         │      👤 USER         │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                    ┌─────────────────────────────┐
-                    │       ⚛️ REACT APP          │
-                    │       Vite + Tailwind       │
-                    └──────────────┬──────────────┘
-                                   │
-                           REST API / Socket.IO
-                                   │
-                                   ▼
-                    ┌─────────────────────────────┐
-                    │      ⚙️ NODE + EXPRESS      │
-                    │        BACKEND API          │
-                    └──────────┬──────┬───────────┘
-                               │      │
-                 ┌─────────────┘      └──────────────┐
-                 ▼                                   ▼
-        ┌──────────────────┐                ┌──────────────────┐
-        │ 🍃 MongoDB Atlas │                │   External APIs  │
-        │    Database      │                │                  │
-        └──────────────────┘                │ 💳 Razorpay      │
-                                            │ 🗺️ TomTom        │
-                                            │ ☁️ Cloudinary     │
-                                            │ 📧 Nodemailer     │
-                                            └──────────────────┘
-```
+<p align="center">
 
----
+```text
+                         👤 USER
+                           │
+                           │ HTTPS
+                           ▼
+              ╭──────────────────────────╮
+              │      ⚛️ TEDBUS APP       │
+              │                          │
+              │  React + Vite + Tailwind │
+              ╰────────────┬─────────────╯
+                           │
+                  REST API + Socket.IO
+                           │
+                           ▼
+              ╭──────────────────────────╮
+              │     ⚙️ BACKEND API       │
+              │                          │
+              │   Node.js + Express.js   │
+              ╰────────────┬─────────────╯
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+              ▼            ▼            ▼
+       ╭────────────╮ ╭────────────╮ ╭──────────────╮
+       │ 🍃 MongoDB │ │ 🔌 Socket  │ │ ☁️ Services  │
+       │   Atlas    │ │    .IO     │ │              │
+       │            │ │            │ │ 💳 Razorpay  │
+       │ Database   │ │ Real-time  │ │ 🗺️ TomTom    │
+       ╰────────────╯ ╰────────────╯ │ ☁️ Cloudinary│
+                                     │ 📧 Nodemailer│
+                                     ╰──────────────╯
 
 # 🔄 Booking Flow
 
@@ -397,36 +398,6 @@ i18next-browser-languagedetector
 
 ---
 
-# 🔔 Real-Time Architecture
-
-TedBus uses **Socket.IO** for real-time communication.
-
-```text
-                👤 USER
-                   │
-                   ▼
-          ┌────────────────┐
-          │ React Client   │
-          └───────┬────────┘
-                  │
-             WebSocket
-                  │
-                  ▼
-          ┌────────────────┐
-          │ Socket.IO      │
-          │ Server         │
-          └───────┬────────┘
-                  │
-          ┌───────┴────────┐
-          ▼                ▼
-   🔔 Notifications    📋 Updates
-          │                │
-          └───────┬────────┘
-                  ▼
-             👥 Clients
-```
-
----
 
 # 🗄️ Database Design
 
@@ -464,47 +435,7 @@ users
 
 ---
 
-# 📂 Project Structure
 
-```text
-TedBus/
-│
-├── tedbus-frontend/
-│   │
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   ├── context/
-│   │   ├── assets/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   │
-│   ├── public/
-│   ├── package.json
-│   └── vite.config.js
-│
-├── tedbus-backend/
-│   │
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── jobs/
-│   │
-│   ├── app.js
-│   ├── server.js
-│   ├── package.json
-│   └── config.env
-│
-└── README.md
-```
-
----
 
 # 🔌 API Modules
 
@@ -607,33 +538,33 @@ http://localhost:5173
 ```env
 PORT=5000
 
-MONGO_URI=your_mongodb_connection_string
+MONGO_URI=*****************
 
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=
 
-JWT_SECRET=your_jwt_secret
+JWT_SECRET=
 
-RAZORPAY_KEY_ID=your_razorpay_key
-RAZORPAY_KEY_SECRET=your_razorpay_secret
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
 
-EMAIL_USER=your_email
-EMAIL_PASS=your_email_password
+EMAIL_USER=
+EMAIL_PASS=
 
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 ### Frontend `.env`
 
 ```env
-VITE_API_BASE_URL=http://localhost:5000/api/v1
+VITE_API_BASE_URL=
 
-VITE_SOCKET_URL=http://localhost:5000
+VITE_SOCKET_URL=
 
-VITE_RAZORPAY_KEY_ID=your_razorpay_key
+VITE_RAZORPAY_KEY_ID=razorpay_key
 
-VITE_TOMTOM_API_KEY=your_tomtom_api_key
+VITE_TOMTOM_API_KEY=_tomtom_api_key
 ```
 
 ---
@@ -687,56 +618,7 @@ MongoDB Atlas
 
 ---
 
-# 🧪 Production Testing Checklist
 
-```text
-☐ Register
-☐ OTP Verification
-☐ Login
-☐ Logout
-☐ Forgot Password
-☐ Reset Password
-
-☐ Search Bus
-☐ Filter Bus
-☐ Sort Bus
-☐ View Bus Details
-☐ Select Seat
-☐ Passenger Information
-
-☐ Coupon
-☐ Razorpay Payment
-☐ Booking Confirmation
-☐ Ticket Generation
-☐ My Bookings
-
-☐ Notifications
-☐ Real-Time Socket Connection
-☐ Reviews
-☐ Ratings
-
-☐ Community Posts
-☐ Comments
-☐ Likes
-☐ Forums
-☐ Discussions
-
-☐ Route Planner
-☐ Save Route
-☐ Dark Mode
-☐ Language Switching
-
-☐ Admin Dashboard
-☐ Admin Bus Management
-☐ Admin Booking Management
-☐ Admin User Management
-
-☐ Mobile Responsive
-☐ Direct URL Refresh
-☐ Production CORS
-```
-
----
 
 # 📊 Project Highlights
 
