@@ -112,7 +112,7 @@ Admin Management
 
 <table>
 <tr>
-<td width="70%">
+<td width="50%">
 
 ### 🔐 Authentication
 - JWT Authentication
@@ -126,7 +126,7 @@ Admin Management
 
 </td>
 
-<td width="70%">
+<td width="50%">
 
 ### 🚌 Bus Booking
 - Search Buses
