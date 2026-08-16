@@ -50,7 +50,7 @@
 | ⚙️ **Backend API** | [tedbus-backend-grug.onrender.com](https://tedbus-backend-grug.onrender.com) |
 | 💻 **GitHub Repository** | [github.com/125Praveshyadav/TedBus](https://github.com/125Praveshyadav/TedBus) |
 
-> ⚡ **Note:** The backend is hosted on Render's free instance, so the first request after inactivity may take some time to wake the server.
+
 
 ---
 
@@ -112,7 +112,7 @@ Admin Management
 
 <table>
 <tr>
-<td width="50%">
+<td width="70%">
 
 ### 🔐 Authentication
 - JWT Authentication
@@ -126,7 +126,7 @@ Admin Management
 
 </td>
 
-<td width="50%">
+<td width="70%">
 
 ### 🚌 Bus Booking
 - Search Buses
@@ -444,7 +444,7 @@ i18next-browser-languagedetector
 
 # 🔄 Booking Flow
 
-```text
+
 ┌──────────────┐
 │ Search Bus   │
 └──────┬───────┘
