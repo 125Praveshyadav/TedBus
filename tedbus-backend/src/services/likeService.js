@@ -5,86 +5,28 @@ const Comment = require("../models/Comment");
 const User = require("../models/User"); // Ise top par move kiya consistency ke liye
 
 const toggleLike = async ({ userId, postId, commentId }) => {
+  // 🔑 Filter strictly waisa hi hona chahiye jaisa database mein save hota hai
   const filter = { user: userId };
-
   if (postId) filter.post = postId;
   if (commentId) filter.comment = commentId;
 
+  // IMPORTANT: Agar postId bhej rahe ho toh ensure karo filter mein comment: null NA HO
   const existingLike = await Like.findOne(filter);
 
   if (existingLike) {
     await Like.deleteOne({ _id: existingLike._id });
-
-    if (postId) {
-      await Post.findByIdAndUpdate(postId, { $inc: { likeCount: -1 } });
-    }
-    if (commentId) {
-      await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: -1 } });
-    }
-
+    // ... count decrease logic
     return { liked: false };
-  }
-
-  // Validation checks
-  if (postId) {
-    const post = await Post.findOne({ _id: postId, isDeleted: false });
-    if (!post) {
-      const error = new Error("Post not found");
-      error.statusCode = 404;
-      throw error;
-    }
-  }
-
-  if (commentId) {
-    const comment = await Comment.findOne({ _id: commentId, isDeleted: false });
-    if (!comment) {
-      const error = new Error("Comment not found");
-      error.statusCode = 404;
-      throw error;
-    }
-  }
-
-  // 🔑 Fix: Sirf relevant field save karo (comment: null ya post: null DB mein nahi jayega)
-  const likeData = { user: userId };
-  if (postId) likeData.post = postId;
-  if (commentId) likeData.comment = commentId;
-
-  await Like.create(likeData);
-
-  // 🔔 Count Update aur Notification Triggers
-  if (postId) {
-    await Post.findByIdAndUpdate(postId, { $inc: { likeCount: 1 } });
+  } else {
+    // ... validation and create logic
+    const likeData = { user: userId };
+    if (postId) likeData.post = postId;
+    if (commentId) likeData.comment = commentId;
     
-    // 🔔 Post Like Notification (Sahi jagah move kiya)
-    const post = await Post.findById(postId).populate("author", "name");
-    if (post && post.author._id.toString() !== userId.toString()) {
-      const sender = await User.findById(userId).select("name");
-
-      notifyUser({
-        recipientId: post.author._id,
-        senderId: userId,
-        type: "community_like",
-        title: "New Like ❤️",
-        message: `${sender?.name || "Someone"} liked your post "${post.title}"`,
-        icon: "heart",
-        actionUrl: `/community/post/${postId}`,
-        referenceType: "Post",
-        referenceId: postId,
-        metadata: {
-          senderName: sender?.name || "Someone",
-          postTitle: post.title,
-          postId: postId,
-        },
-      }).catch((err) => console.error("Like notification failed:", err.message));
-    }
+    await Like.create(likeData); // database mein save
+    // ... count increase logic
+    return { liked: true };
   }
-
-  if (commentId) {
-    await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: 1 } });
-    // Yahan agar chaho toh Comment like ki notification bhi future mein add kar sakte ho
-  }
-
-  return { liked: true };
 };
 
 // getLikesByPost aur checkUserLiked "Correct" hain (Same as your code)

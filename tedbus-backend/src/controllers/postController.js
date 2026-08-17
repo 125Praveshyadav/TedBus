@@ -1,6 +1,7 @@
 const postService = require("../services/postService");
 const likeService = require("../services/likeService");
 const uploadToCloudinary = require("../utils/uploadToCloudinary");
+const Like = require("../models/Like");
 
 const createPost = async (req, res, next) => {
   try {
@@ -44,6 +45,22 @@ const getPosts = async (req, res, next) => {
       ...req.query, 
       isAdmin: isAdmin // Service ko batao ki ye admin hai
     });
+
+      if (req.user) {
+      const postsWithLikeStatus = await Promise.all(
+        result.posts.map(async (post) => {
+          const isLiked = await Like.findOne({
+            user: req.user._id,
+            post: post._id
+          });
+          // post object ko plane JS object bana kar field add karo
+          const postObj = post.toObject();
+          postObj.isLikedByMe = !!isLiked; 
+          return postObj;
+        })
+      );
+      result.posts = postsWithLikeStatus;
+    }
     res.status(200).json({ success: true, ...result });
   } catch (error) {
     next(error);
