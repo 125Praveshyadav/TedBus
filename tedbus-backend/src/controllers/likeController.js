@@ -21,6 +21,8 @@ const toggleLike = async (req, res, next) => {
       success: true,
       message: result.liked ? "Liked successfully" : "Unliked successfully",
       liked: result.liked,
+      likeCount: result.likeCount,
+
     });
   } catch (error) {
     // Duplicate key error (MongoDB Error Code 11000)
