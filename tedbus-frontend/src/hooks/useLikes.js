@@ -7,52 +7,55 @@ const useLikes = (initialLikedStatus = false, initialLikeCount = 0) => {
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [loading, setLoading] = useState(false);
 
-  // Agar props change ho (jaise Post details late load ho), toh sync karo
   useEffect(() => {
     setIsLiked(initialLikedStatus);
     setLikeCount(initialLikeCount);
   }, [initialLikedStatus, initialLikeCount]);
 
   const handleToggleLike = async (postId = null, commentId = null) => {
-    if (loading) return; // Double click prevent karo
+    if (loading) return;
 
-    setLoading(true);
-
-    // Purane state ko yaad rakho (agar error aaye toh revert kar sakein)
+    // 1. Backup current state
     const previousLiked = isLiked;
     const previousCount = likeCount;
 
-    // Optimistic UI update
+    // 2. Optimistic UI update (Turant badlaav)
     const newLiked = !previousLiked;
-    const newCount = newLiked ? previousCount + 1 : previousCount - 1;
+    const newCount = newLiked ? previousCount + 1 : Math.max(0, previousCount - 1);
 
     setIsLiked(newLiked);
     setLikeCount(newCount);
 
     try {
-      const data = await likeService.toggleLike({ postId, commentId });
+      setLoading(true);
+      const res = await likeService.toggleLike({ postId, commentId });
 
-      // Backend se aaya hua actual state set karo
+      // 🔑 Safety Check: Kuch setups mein res.data hota hai, kuch mein direct res
+      const data = res?.data !== undefined ? res.data : res;
+
       if (data && typeof data.liked === "boolean") {
         setIsLiked(data.liked);
+        // 🔔 Server se naya count le lo agar available hai
+        if (data.likeCount !== undefined) {
+          setLikeCount(data.likeCount);
+        }
       }
     } catch (err) {
-      console.error("Like error:", err);
-      // Purani state pe wapas jao
+      // 3. Rollback: Agar fail hua toh purana state wapas
       setIsLiked(previousLiked);
       setLikeCount(previousCount);
-      toast.error("Failed to update like");
+      
+      console.error("Like error detail:", err.response?.data || err.message);
+      
+      // Toast message server se lo agar available hai
+      const errMsg = err.response?.data?.message || "Failed to update like";
+      toast.error(errMsg);
     } finally {
       setLoading(false);
     }
   };
 
-  return {
-    isLiked,
-    likeCount,
-    loading,
-    handleToggleLike,
-  };
+  return { isLiked, likeCount, loading, handleToggleLike };
 };
 
 export default useLikes;

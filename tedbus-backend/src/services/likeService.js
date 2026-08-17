@@ -2,6 +2,7 @@ const { notifyUser } = require("./notificationDispatcher");
 const Like = require("../models/Like");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
+const User = require("../models/User"); // Ise top par move kiya consistency ke liye
 
 const toggleLike = async ({ userId, postId, commentId }) => {
   const filter = { user: userId };
@@ -24,6 +25,7 @@ const toggleLike = async ({ userId, postId, commentId }) => {
     return { liked: false };
   }
 
+  // Validation checks
   if (postId) {
     const post = await Post.findOne({ _id: postId, isDeleted: false });
     if (!post) {
@@ -42,23 +44,20 @@ const toggleLike = async ({ userId, postId, commentId }) => {
     }
   }
 
-  // 🔑 Fix: Sirf relevant field add karo, null field mat rakho
+  // 🔑 Fix: Sirf relevant field save karo (comment: null ya post: null DB mein nahi jayega)
   const likeData = { user: userId };
   if (postId) likeData.post = postId;
   if (commentId) likeData.comment = commentId;
 
   await Like.create(likeData);
 
+  // 🔔 Count Update aur Notification Triggers
   if (postId) {
     await Post.findByIdAndUpdate(postId, { $inc: { likeCount: 1 } });
     
-  }
-  if (commentId) {
-    await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: 1 } });
-      // 🔔 NOTIFICATION TRIGGER — Like on Post
+    // 🔔 Post Like Notification (Sahi jagah move kiya)
     const post = await Post.findById(postId).populate("author", "name");
     if (post && post.author._id.toString() !== userId.toString()) {
-      const User = require("../models/User");
       const sender = await User.findById(userId).select("name");
 
       notifyUser({
@@ -71,19 +70,24 @@ const toggleLike = async ({ userId, postId, commentId }) => {
         actionUrl: `/community/post/${postId}`,
         referenceType: "Post",
         referenceId: postId,
-         metadata: {
-    senderName: sender?.name || "Someone",
-    postTitle: post.title,
-    postId: postId,
-  },
+        metadata: {
+          senderName: sender?.name || "Someone",
+          postTitle: post.title,
+          postId: postId,
+        },
       }).catch((err) => console.error("Like notification failed:", err.message));
     }
+  }
+
+  if (commentId) {
+    await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: 1 } });
+    // Yahan agar chaho toh Comment like ki notification bhi future mein add kar sakte ho
   }
 
   return { liked: true };
 };
 
-// Baaki functions same rehenge
+// getLikesByPost aur checkUserLiked "Correct" hain (Same as your code)
 const getLikesByPost = async (postId, filters) => {
   const { page = 1, limit = 20 } = filters;
   const skip = (page - 1) * limit;
