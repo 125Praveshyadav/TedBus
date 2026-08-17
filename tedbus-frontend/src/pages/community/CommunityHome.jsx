@@ -4,6 +4,7 @@ import {
   Flame,
   Loader2,
   MessageCircle,
+  MessageSquare,
   PenSquare,
   RefreshCcw,
   Sparkles,
@@ -13,6 +14,7 @@ import {
   Compass,
   ArrowRight,
   Bus,
+  Bookmark,
 } from "lucide-react";
 
 import usePosts from "../../hooks/usePosts";
@@ -47,6 +49,39 @@ const heroStats = [
   { label: "Travelers", value: "1.5K+", icon: Users },
   { label: "Stories", value: "250+", icon: MapPin },
   { label: "Routes", value: "50+", icon: Compass },
+];
+
+// ✅ NEW — Quick Actions navbar (mobile only). Same colors/style as CommunitySidebar's
+// Quick Actions block, so it stays visually consistent across the app.
+const QUICK_ACTIONS = [
+  {
+    to: "/community/create-post",
+    icon: PenSquare,
+    label: "New Post",
+    color: "from-red-600 to-orange-500",
+    shadow: "shadow-red-500/20",
+  },
+  {
+    to: "/community/forums",
+    icon: MessageSquare,
+    label: "Forums",
+    color: "from-emerald-600 to-teal-500",
+    shadow: "shadow-emerald-500/20",
+  },
+  {
+    to: "/community/profile/me",
+    icon: Users,
+    label: "Profile",
+    color: "from-violet-600 to-purple-500",
+    shadow: "shadow-violet-500/20",
+  },
+  {
+    to: "/community/saved",
+    icon: Bookmark,
+    label: "Saved",
+    color: "from-amber-600 to-yellow-500",
+    shadow: "shadow-amber-500/20",
+  },
 ];
 
 const CommunityHome = () => {
@@ -268,6 +303,30 @@ const CommunityHome = () => {
           />
         </svg>
       </section>
+
+      {/* ═══════════════════ MOBILE QUICK ACTIONS NAVBAR (NEW) ═══════════════════ */}
+      {/* Visible only below the lg breakpoint — on lg+ these same actions already
+          live inside CommunitySidebar's Quick Actions block. */}
+      <div className="border-b border-slate-200/60 bg-white dark:border-slate-800/60 dark:bg-slate-900 lg:hidden">
+        <div className="mx-auto grid max-w-7xl grid-cols-4 gap-1 px-4 py-3 sm:px-6">
+          {QUICK_ACTIONS.map((action) => (
+            <Link
+              key={action.to}
+              to={action.to}
+              className="group flex flex-col items-center gap-1.5 rounded-xl p-2 transition active:scale-95"
+            >
+              <div
+                className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${action.color} shadow-md ${action.shadow} text-white transition-transform group-active:scale-90`}
+              >
+                <action.icon className="h-4 w-4" />
+              </div>
+              <span className="text-[10px] font-black text-slate-600 dark:text-slate-300">
+                {action.label}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </div>
 
       {/* ═══════════════════ STICKY TABS ═══════════════════ */}
       <div

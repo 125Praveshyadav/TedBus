@@ -13,17 +13,20 @@ const toggleLike = async ({ userId, postId, commentId }) => {
   const existingLike = await Like.findOne(filter);
 
   if (existingLike) {
-    await Like.deleteOne({ _id: existingLike._id });
+  await Like.deleteOne({ _id: existingLike._id });
 
-    if (postId) {
-      await Post.findByIdAndUpdate(postId, { $inc: { likeCount: -1 } });
-    }
-    if (commentId) {
-      await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: -1 } });
-    }
-
-    return { liked: false };
+  let updatedLikeCount;
+  if (postId) {
+    const updatedPost = await Post.findByIdAndUpdate(postId, { $inc: { likeCount: -1 } }, { new: true });
+    updatedLikeCount = updatedPost.likeCount;
   }
+  if (commentId) {
+    const updatedComment = await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: -1 } }, { new: true });
+    updatedLikeCount = updatedComment.likeCount;
+  }
+
+  return { liked: false, likeCount: updatedLikeCount };
+}
 
   // Validation checks
   if (postId) {
@@ -44,7 +47,6 @@ const toggleLike = async ({ userId, postId, commentId }) => {
     }
   }
 
-  // 🔑 Fix: Sirf relevant field save karo (comment: null ya post: null DB mein nahi jayega)
   const likeData = { user: userId };
   if (postId) likeData.post = postId;
   if (commentId) likeData.comment = commentId;
@@ -52,8 +54,10 @@ const toggleLike = async ({ userId, postId, commentId }) => {
   await Like.create(likeData);
 
   // 🔔 Count Update aur Notification Triggers
+  let updatedLikeCount;
   if (postId) {
-    await Post.findByIdAndUpdate(postId, { $inc: { likeCount: 1 } });
+    const updatedPost = await Post.findByIdAndUpdate(postId, { $inc: { likeCount: 1 } }, { new: true });
+    updatedLikeCount = updatedPost.likeCount;
     
     // 🔔 Post Like Notification (Sahi jagah move kiya)
     const post = await Post.findById(postId).populate("author", "name");
@@ -79,12 +83,12 @@ const toggleLike = async ({ userId, postId, commentId }) => {
     }
   }
 
-  if (commentId) {
-    await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: 1 } });
-    // Yahan agar chaho toh Comment like ki notification bhi future mein add kar sakte ho
-  }
+ if (commentId) {
+  const updatedComment = await Comment.findByIdAndUpdate(commentId, { $inc: { likeCount: 1 } }, { new: true });
+  updatedLikeCount = updatedComment.likeCount;//agr comment krane ke baad notification chahiye to yeha add kr skata hu
+}
 
-  return { liked: true };
+ return { liked: true, likeCount: updatedLikeCount };
 };
 
 // getLikesByPost aur checkUserLiked "Correct" hain (Same as your code)

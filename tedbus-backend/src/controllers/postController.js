@@ -67,16 +67,21 @@ const getPosts = async (req, res, next) => {
   }
 };
 
+
 const getPostById = async (req, res, next) => {
   try {
     const post = await postService.getPostById(req.params.id);
+    const postObj = post.toObject();
 
-    let liked = false;
+    postObj.isLikedByMe = false;
     if (req.user) {
-      liked = await likeService.checkUserLiked({ userId: req.user._id, postId: post._id });
+      postObj.isLikedByMe = await likeService.checkUserLiked({
+        userId: req.user._id,
+        postId: post._id,
+      });
     }
 
-    res.status(200).json({ success: true, post, liked });
+    res.status(200).json({ success: true, post: postObj });
   } catch (error) {
     next(error);
   }
