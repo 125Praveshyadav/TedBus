@@ -46,13 +46,12 @@ const feedTabs = [
 ];
 
 const heroStats = [
-  { label: "Travelers", value: "1.5K+", icon: Users },
-  { label: "Stories", value: "250+", icon: MapPin },
-  { label: "Routes", value: "50+", icon: Compass },
+  { label: "Travelers", value: "500+", icon: Users },
+  { label: "Stories", value: "10+", icon: MapPin },
+  { label: "Routes", value: "20+", icon: Compass },
 ];
 
-// ✅ NEW — Quick Actions navbar (mobile only). Same colors/style as CommunitySidebar's
-// Quick Actions block, so it stays visually consistent across the app.
+
 const QUICK_ACTIONS = [
   {
     to: "/community/create-post",
@@ -64,7 +63,7 @@ const QUICK_ACTIONS = [
   {
     to: "/community/forums",
     icon: MessageSquare,
-    label: "Forums",
+    label: "Forums & Discussions",
     color: "from-emerald-600 to-teal-500",
     shadow: "shadow-emerald-500/20",
   },
@@ -223,7 +222,7 @@ const CommunityHome = () => {
                     </div>
                     <div>
                       <p className="text-xs font-black text-slate-900 dark:text-white">
-                        Saumya S.
+                        Saumya Singh
                       </p>
                       <p className="text-[10px] font-bold text-slate-500">
                         Delhi → Lucknow
@@ -247,7 +246,7 @@ const CommunityHome = () => {
                     </div>
                     <div>
                       <p className="text-xs font-black text-slate-900 dark:text-white">
-                        Rakshit S.
+                        Rakshit Sharma
                       </p>
                       <p className="text-[10px] font-bold text-slate-500">
                         Mumbai → Goa
@@ -271,7 +270,7 @@ const CommunityHome = () => {
                     </div>
                     <div>
                       <p className="text-xs font-black text-slate-900 dark:text-white">
-                        Vijay Y.
+                        Vijay Yadav
                       </p>
                       <p className="text-[10px] font-bold text-slate-500">
                         Delhi → Deoria
