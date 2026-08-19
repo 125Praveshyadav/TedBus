@@ -119,7 +119,7 @@ const useLikes = (postId = null, commentId = null, initialCount = 0) => {
       console.error("Like error:", err?.response?.data || err);
       setIsLiked(previousLiked);
       setLikeCount(previousCount);
-      toast.error("Failed to update like");
+      toast.error("Login First to like or unlike");
     } finally {
       setLoading(false);
     }
