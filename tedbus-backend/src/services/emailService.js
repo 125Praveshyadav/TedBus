@@ -54,6 +54,78 @@
 // };
 // module.exports = sendEmail;
 
+// const { BrevoClient } = require("@getbrevo/brevo");
+
+// const brevo = new BrevoClient({
+//   apiKey: process.env.BREVO_API_KEY,
+// });
+
+// /**
+//  * Send email using Brevo API
+//  *
+//  * @param {Object} options
+//  * @param {string} options.to - recipient email
+//  * @param {string} options.subject - subject line
+//  * @param {string} options.html - HTML body
+//  * @param {Array} [options.attachments] - optional attachments
+//  */
+// const sendEmail = async ({ to, subject, html, attachments }) => {
+//   try {
+//     if (!to) {
+//       throw new Error("Recipient email is required");
+//     }
+
+//     if (!process.env.BREVO_API_KEY) {
+//       throw new Error("BREVO_API_KEY is not configured");
+//     }
+
+//     if (!process.env.EMAIL_FROM) {
+//       throw new Error("EMAIL_FROM is not configured");
+//     }
+
+//     const emailData = {
+//       sender: {
+//         name: process.env.EMAIL_FROM_NAME || "TedBus",
+//         email: process.env.EMAIL_FROM,
+//       },
+
+//       to: [
+//         {
+//           email: to,
+//         },
+//       ],
+
+//       subject: subject,
+//       htmlContent: html,
+//     };
+
+//     // Support attachments if any existing TedBus functionality uses them
+//     if (attachments && attachments.length > 0) {
+//       emailData.attachment = attachments.map((file) => ({
+//         name: file.filename,
+//         content: file.content,
+//       }));
+//     }
+
+//     const response =
+//       await brevo.transactionalEmails.sendTransacEmail(emailData);
+
+//     console.log("📨 Brevo email sent successfully");
+
+//     return response;
+//   } catch (error) {
+//     console.error(
+//       "❌ BREVO EMAIL SEND ERROR:",
+//       error?.message || error
+//     );
+
+//     throw error;
+//   }
+// };
+
+// module.exports = sendEmail;
+
+
 const { BrevoClient } = require("@getbrevo/brevo");
 
 const brevo = new BrevoClient({
@@ -65,7 +137,7 @@ const brevo = new BrevoClient({
  *
  * @param {Object} options
  * @param {string} options.to - recipient email
- * @param {string} options.subject - subject line
+ * @param {string} options.subject - email subject
  * @param {string} options.html - HTML body
  * @param {Array} [options.attachments] - optional attachments
  */
@@ -95,22 +167,36 @@ const sendEmail = async ({ to, subject, html, attachments }) => {
         },
       ],
 
-      subject: subject,
+      subject,
       htmlContent: html,
     };
 
-    // Support attachments if any existing TedBus functionality uses them
+    // Convert attachments to Brevo format
     if (attachments && attachments.length > 0) {
-      emailData.attachment = attachments.map((file) => ({
-        name: file.filename,
-        content: file.content,
-      }));
+      emailData.attachment = attachments.map((file) => {
+        let base64Content;
+
+        if (Buffer.isBuffer(file.content)) {
+          base64Content = file.content.toString("base64");
+        } else if (typeof file.content === "string") {
+          base64Content = file.content;
+        } else {
+          throw new Error(
+            `Invalid attachment content for ${file.filename}`
+          );
+        }
+
+        return {
+          name: file.filename,
+          content: base64Content,
+        };
+      });
     }
 
     const response =
       await brevo.transactionalEmails.sendTransacEmail(emailData);
 
-    console.log("📨 Brevo email sent successfully");
+    console.log("📨 Brevo email sent successfully:", response);
 
     return response;
   } catch (error) {
