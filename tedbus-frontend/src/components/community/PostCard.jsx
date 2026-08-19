@@ -95,14 +95,31 @@ const formatCount = (num) => {
   return num;
 };
 
+// const PostCard = ({ post }) => {
+//   const { isLiked, likeCount, handleToggleLike } = useLikes(
+//     post.isLikedByMe,
+//     post.likeCount
+//   );
+
+//   const [showMenu, setShowMenu] = useState(false);
+
+//const theme = getTypeTheme(post.postType);
+
+//   const authorName = post.author?.name || "Anonymous";
+//   const authorInitial = authorName.charAt(0).toUpperCase();
+
+//   const hasRoute = post.route?.source && post.route?.destination;
+//   const hasImages = Array.isArray(post.images) && post.images.length > 0;
+//   const hasTags = Array.isArray(post.tags) && post.tags.length > 0;
+
 const PostCard = ({ post }) => {
   const { isLiked, likeCount, handleToggleLike } = useLikes(
-    post.isLikedByMe,
-    post.likeCount
+    post._id,           // postId pass kar rahe hain
+    null,               // commentId null
+    post.likeCount || 0
   );
 
   const [showMenu, setShowMenu] = useState(false);
-
   const theme = getTypeTheme(post.postType);
 
   const authorName = post.author?.name || "Anonymous";

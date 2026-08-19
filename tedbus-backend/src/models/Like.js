@@ -10,12 +10,14 @@ const likeSchema = new mongoose.Schema(
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
-    
+      default: null,
+      sparse: true,           // null values ko ignore karega
     },
     comment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
-     
+      default: null,
+      sparse: true,
     },
   },
   { timestamps: true }
