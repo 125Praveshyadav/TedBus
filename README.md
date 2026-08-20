@@ -564,7 +564,7 @@ TedBus implements several security practices:
 🌐 CORS Configuration
 ```
 
-> **Important:** Never commit `.env`, `config.env`, API keys, database passwords or other secrets to GitHub.
+
 
 ---
 
