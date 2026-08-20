@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
-  
   Edit3,
   Heart,
   MessageCircle,
@@ -44,9 +43,11 @@ const PostDetails = () => {
     fetchPostById(id);
   }, [id, fetchPostById]);
 
+  // 🔑 FIX: Naya signature — useLikes(postId, commentId, initialCount)
   const { isLiked, likeCount, handleToggleLike } = useLikes(
-    singlePost?.isLikedByMe,
-    singlePost?.likeCount || 0,
+    id,                          // postId (URL se)
+    null,                        // commentId null
+    singlePost?.likeCount || 0   // initialCount
   );
 
   if (loading || !singlePost) {
@@ -212,7 +213,7 @@ const PostDetails = () => {
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => handleToggleLike(singlePost._id)}
+                  onClick={() => handleToggleLike()}
                   className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-black transition-all active:scale-90 ${
                     isLiked
                       ? "bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400"
